@@ -69,6 +69,11 @@ extern "C" {
     
 #define LCW_CMD_NUM 34				
 #define LCW_CMD_LEN 4 
+    
+#define POC_CMD_NUM 7				
+#define POC_CMD_LEN 4  
+#define PC_CMD_NUM 7				
+#define PC_CMD_LEN 4     
 
 #define UART_Start_Byte 0x24     //$$$
 #define UART_End_Byte 0x23       //###
@@ -134,6 +139,25 @@ enum {
     FEEDBACKSERL,
 };
 
+enum {		    //RS232 Command Execute
+	INX_POC_DALS=0, //Interface Mode
+    INX_POC_OCDD, //Data driver IC
+    INX_POC_OCCD, //Cell driver ciruit
+    INX_POC_OCDS, //Display signel
+    INX_POC_CBVC, //Voltage/Current/Temp.  LED Open/Short
+    INX_POC_TIME, //time
+    INX_POC_EERM, //EEPROM
+};
+
+enum {		    //RS232 Command Execute
+	INX_PC_DALS=0, //Interface Mode
+    INX_PC_OCDD, //Data driver IC
+    INX_PC_OCCD, //Cell driver ciruit
+    INX_PC_OCDS, //Display signel
+    INX_PC_CBVC, //Voltage/Current/Temp.  LED Open/Short
+    INX_PC_TIME, //time
+    INX_PC_EERM, //EEPROM
+};
 
     // *****************************************************************************
 
@@ -225,9 +249,17 @@ enum {
 void LCW_parsingCommand_SERCOM0(uint8_t *RxBuffer, size_t RxBufSize);    
 void CheckLCW_Command(char *chkcmdString,size_t cmd_size);
 unsigned char ExecuteCommand(char *cmddataString,unsigned char n);
+void POC_parsingCommand_SERCOM5(uint8_t *RxBuffer_POC, size_t RxBufSize_POC);
+void PC_parsingCommand_SERCOM0(uint8_t *RxBuffer_PC, size_t RxBufSize_PC);
+void CheckPOC_Command(char *chkcmdString_POC,size_t cmd_size_POC);
+void CheckPC_Command(char *chkcmdString_PC,size_t cmd_size_PC);
+unsigned char ExecuteCommand_POC(char *cmddataString_POC,unsigned char n_POC);
+unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC);
 uint16_t Command_HexToDec(int num, char *buffer);
 uint16_t lcw_pow(uint16_t x,uint16_t n);
 void FEEDBACK_UART(unsigned char n);
+void FEEDBACK_UART_POC(unsigned char n);
+void FEEDBACK_UART_PC(unsigned char n);
 
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

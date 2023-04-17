@@ -220,7 +220,7 @@ void OLEDInit(void)
     /*
     uint8_t k = 0;
     volatile I2C1_TRANSFER_STATUS transferStatus = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatus );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatus );
     transferStatus = I2C1_TRANSFER_STATUS_SUCCESS;    
     for (k = 0; k < 25; k++)
     {

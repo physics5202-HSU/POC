@@ -138,6 +138,7 @@ void JUDGEMAN_APP_Tasks ( void )
 
         case JUDGEMAN_APP_STATE_SERVICE_TASKS:
         {
+            //Als_read = ALS_Read(ALS_1_CTRL_ADDR);
             //threadJudgeman();
             break;
         }

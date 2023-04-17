@@ -66,6 +66,15 @@
 // *****************************************************************************
 
   
+/*** Macros for GPIO_PC01 pin ***/
+#define GPIO_PC01_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 1)
+#define GPIO_PC01_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 1)
+#define GPIO_PC01_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 1)
+#define GPIO_PC01_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 1)) & 0x01)
+#define GPIO_PC01_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 1)
+#define GPIO_PC01_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 1)
+#define GPIO_PC01_PIN                  PORT_PIN_PC01
+
 /*** Macros for GPIO_PB06 pin ***/
 #define GPIO_PB06_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 6)
 #define GPIO_PB06_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 6)
@@ -111,23 +120,14 @@
 #define GPIO_PA07_InputEnable()       (PORT_REGS->GROUP[0].PORT_DIRCLR = 1 << 7)
 #define GPIO_PA07_PIN                  PORT_PIN_PA07
 
-/*** Macros for GPIO_PC22 pin ***/
-#define GPIO_PC22_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 22)
-#define GPIO_PC22_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 22)
-#define GPIO_PC22_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 22)
-#define GPIO_PC22_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 22)) & 0x01)
-#define GPIO_PC22_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 22)
-#define GPIO_PC22_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 22)
-#define GPIO_PC22_PIN                  PORT_PIN_PC22
-
-/*** Macros for GPIO_PC23 pin ***/
-#define GPIO_PC23_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 23)
-#define GPIO_PC23_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 23)
-#define GPIO_PC23_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 23)
-#define GPIO_PC23_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 23)) & 0x01)
-#define GPIO_PC23_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 23)
-#define GPIO_PC23_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 23)
-#define GPIO_PC23_PIN                  PORT_PIN_PC23
+/*** Macros for GPIO_PC10 pin ***/
+#define GPIO_PC10_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 10)
+#define GPIO_PC10_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 10)
+#define GPIO_PC10_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 10)
+#define GPIO_PC10_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 10)) & 0x01)
+#define GPIO_PC10_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 10)
+#define GPIO_PC10_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 10)
+#define GPIO_PC10_PIN                  PORT_PIN_PC10
 
 /*** Macros for GPIO_PA27 pin ***/
 #define GPIO_PA27_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 27)

@@ -52,6 +52,10 @@
 #include "OLED12864.h"
 #include "adc.h"
 
+extern EEPROMData EEDataDefault;
+extern EEPROMData EEData;
+extern EEPROMData_POC EEDataDefault_POC;
+extern EEPROMData_POC EEData_POC;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
@@ -68,8 +72,33 @@ static void rtcEventHandler (RTC_TIMER32_INT_MASK intCause, uintptr_t context)
 	}
 }
 
-extern EEPROMData EEDataDefault;
-extern EEPROMData EEData;
+#if 0
+void TC3_Overflow(TC_COMPARE_STATUS status, uintptr_t context)
+{
+     uint8_t *TXCMD_POC = calloc(2, sizeof(uint8_t *));
+    if( status & TC_INTFLAG_OVF_Msk )
+    {
+    Second_poc = Second_poc+1;
+    printf("%d\n",Second_poc);
+       TXCMD_POC[0] = Second_poc;
+       SERCOM5_USART_Write(TXCMD_POC, 1);    
+    }
+    if(Second_poc == 0x3c)
+    {
+        Second_poc = 0; 
+       EEData_POC.ucminute = EEData_POC.ucminute + 1;
+       TXCMD_POC[1] = EEData_POC.ucminute;
+       SERCOM5_USART_Write(TXCMD_POC, 2);
+       if(EEData_POC.ucminute == 0x3c)
+       {
+           EEData_POC.ucminute = 0;
+           EEData_POC.uchour = EEData_POC.uchour + 1;
+       }
+       
+    }
+    free(TXCMD_POC);
+}
+#endif
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -82,6 +111,10 @@ int main ( void )
     TCC0_PWMStart();
 	RTC_Timer32CallbackRegister(rtcEventHandler, 0);
 	RTC_Timer32Start();
+    EEData_POC = EEDataDefault_POC;
+    Second_poc = 0;
+    //TC3_CompareCallbackRegister( TC3_Overflow, (uintptr_t )NULL );
+    //TC3_CompareStart();
     Als_Crlon = 0;
     Als_Demo01 = 0;
     Als_Demo02 = 0;
@@ -100,6 +133,7 @@ int main ( void )
     flagHMI = false;
     flagReadEEPROM = true;
     EEData = EEDataDefault;
+
     //drbo_NUM = EEData.drbo_NUM_EE;
     //ADC0_CallbackRegister(ADC_EventHandler, (uintptr_t)NULL);
     //ADC0_Enable();
@@ -112,6 +146,7 @@ int main ( void )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         //threadJudgeman();
+        //TC3_Overflow();
         SYS_Tasks ( );
     }
 

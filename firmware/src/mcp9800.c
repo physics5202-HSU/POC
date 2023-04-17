@@ -102,7 +102,7 @@ uint8_t MCP9800I2c1ConfigRegWrite(uint8_t i2c1_reg_addr, uint8_t i2c1_reg_data)
 
 	i2c1_config_write_buf[1] = i2c1_reg_data;
 
-	if(!SERCOM7_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_config_write_buf[0], 0x02))
+	if(!SERCOM1_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_config_write_buf[0], 0x02))
 	{
 		return false;
 	}
@@ -114,9 +114,9 @@ uint8_t MCP9800I2c1ConfigRegRead(uint8_t i2c1_reg_addr, uint8_t *i2c1_pData)
 {
     uint8_t i2c1_config_read_buf;
 	i2c1_config_read_buf = 0x01;   
- 	//if(!SERCOM7_I2C_Read(MCP9800_CTRL_ADDR, i2c1_reg_addr, i2c1_pData, 0x01))
-    SERCOM7_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_config_read_buf , 0x01);
-    if(!SERCOM7_I2C_Read(i2c1_reg_addr, i2c1_pData, 0x01))    
+ 	//if(!SERCOM1_I2C_Read(MCP9800_CTRL_ADDR, i2c1_reg_addr, i2c1_pData, 0x01))
+    SERCOM1_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_config_read_buf , 0x01);
+    if(!SERCOM1_I2C_Read(i2c1_reg_addr, i2c1_pData, 0x01))    
 	{
 		return false;
 	}
@@ -162,7 +162,7 @@ uint8_t MCP9800I2c1Write(uint8_t i2c1_reg_addr, uint16_t i2c1_reg_data)
 
 	i2c1_write_buf[2] = 0x00;
 
-	if(!SERCOM7_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_write_buf[0], 0x03))
+	if(!SERCOM1_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_write_buf[0], 0x03))
 	{
 		return false;
 	}
@@ -185,17 +185,17 @@ uint8_t MCP9800I2c1Read(uint8_t i2c1_reg_addr, uint8_t *i2c1_pData)
     //i2c1_Read_buf[0] = 0x00;
     i2c1_Write_buf = 0x00;
     
-	//if(!SERCOM7_I2C_Read(MCP9800_CTRL_ADDR, i2c1_reg_addr, i2c1_pData, 0x02))
-    SERCOM7_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_Write_buf, 0x01);
-    //SERCOM7_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_reg_addr, 0x01);
-    if(!SERCOM7_I2C_Read(MCP9800_CTRL_ADDR, i2c1_pData, 0x01))    
+	//if(!SERCOM1_I2C_Read(MCP9800_CTRL_ADDR, i2c1_reg_addr, i2c1_pData, 0x02))
+    SERCOM1_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_Write_buf, 0x01);
+    //SERCOM1_I2C_Write(MCP9800_CTRL_ADDR, &i2c1_reg_addr, 0x01);
+    if(!SERCOM1_I2C_Read(MCP9800_CTRL_ADDR, i2c1_pData, 0x01))    
 	{
 		return false;
 	}
 #endif
     
     i2c1_Write_wdata[0] = 0x00;    
-    if(!SERCOM7_I2C_WriteRead(i2c1_reg_addr, &i2c1_Write_wdata[0], 0x01, i2c1_pData, 0x02))
+    if(!SERCOM1_I2C_WriteRead(i2c1_reg_addr, &i2c1_Write_wdata[0], 0x01, i2c1_pData, 0x02))
 	{
 		return false;
 	}

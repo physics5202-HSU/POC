@@ -520,6 +520,7 @@ extern "C" {
  uint16_t Als_max , Als_min , Als_read , Als_count;
  //uint8_t drbo_NUM;
  uint8_t value_stepL;
+ uint8_t Second_poc;
     // *****************************************************************************
     // *****************************************************************************
     // Section: Interface Functions
@@ -726,6 +727,8 @@ extern "C" {
     void LCW_DefaultValue();
     void GPIO_PB09_High(bool v_flag);
     void MCU_TX_HMI(char *buffer);
+    void MCU_TX_POC(char *buffer);
+    void MCU_TX_PC(char *buffer);
     void MCU_TX_HMI_PICC(uint8_t GID );
     void ALS_AutoRun(void);
     void ALS_RunDemo01(void);

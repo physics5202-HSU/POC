@@ -207,9 +207,22 @@ void RS232_APP_Tasks ( void )
         }
         case RS232_APP_STATE_SERVICE_TASKS:
         {
-            if(SERCOM5_USART_ReadCountGet()>0)
+            size_t bfrSize_a = 0;
+            //if(SERCOM5_USART_ReadCountGet()>0)
+            if ((bfrSize_a = SERCOM5_USART_ReadCountGet()) > 0)    
             {    
-                INX_RS232_Handler();
+                //INX_RS232_Handler();
+                    //SYS_CONSOLE_PRINT("LCW_UART_0\r\n");
+                    //ShowUART_Buffer();
+                    uint8_t *soc_aRxBfr = calloc(bfrSize_a+20, sizeof (uint8_t)); 
+                    for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+                    SERCOM5_USART_Read(soc_aRxBfr, bfrSize_a+20);
+                    //LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
+                    for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+                    POC_parsingCommand_SERCOM5(soc_aRxBfr, bfrSize_a+20);     //perrcy
+                    //Message msgSoc_a = parsingCommand_SERCOM5_LCW(soc_aRxBfr, bfrSize_a+20);
+                    //handleMsgFromSoC(msgSoc);
+                    free(soc_aRxBfr);                
             }
             break;
         }

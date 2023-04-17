@@ -1455,7 +1455,7 @@ void UART_APP_Tasks(void) {
         case UART_APP_STATE_INIT:
         {
             SYS_CONSOLE_MESSAGE("Start UART_APP_STATE_INIT!\r\n");
-            GPIO_PC22_InputEnable();
+            //GPIO_PC22_InputEnable();
             //ADC0_Initialize();
             //if(KNOB && flagADC)
             if(KNOB)    
@@ -1709,7 +1709,7 @@ void UART_APP_Tasks(void) {
             //else if(LCW_Button_GPIO3 && flagGPIO)
             else if(LCW_Button_GPIO3)    
             {//GPIO_PC22_ButtonStatus
-                int GPIO_PC22_Now=GPIO_PC22_Get();
+                int GPIO_PC22_Now=0;//GPIO_PC22_Get();
                 if (GPIO_PC22_PreStatus != GPIO_PC22_Now)
                 {
                     GPIO_PC22_PreStatus = GPIO_PC22_Now;
@@ -1768,7 +1768,8 @@ void UART_APP_Tasks(void) {
                     SERCOM0_USART_Read(socRxBfr, bfrSize+20);
                     //LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
                     for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
-                    LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
+                    //LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
+                    PC_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
                     Message msgSoc = parsingCommand_SERCOM0_LCW(socRxBfr, bfrSize+20);
                     handleMsgFromSoC(msgSoc);
                     free(socRxBfr);
@@ -1795,7 +1796,8 @@ void UART_APP_Tasks(void) {
                     //SYS_CONSOLE_PRINT("bfrSize = %d\r\n",bfrSize);
                     //Message msgSoc = parsingCommand(socRxBfr, bfrSize);
                     //SYS_CONSOLE_MESSAGE("\r\n");                   
-                    LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize);       //perrcy
+                    //LCW_parsingCommand_SERCOM0(socRxBfr, bfrSize);       //perrcy
+                    PC_parsingCommand_SERCOM0(socRxBfr, bfrSize+20);     //perrcy
                     //for (uint32_t i = 0; i < 30000; i++);//1ns*20000=2ms
                     Message msgSoc = parsingCommand_SERCOM0(socRxBfr, bfrSize);
                     //SYS_CONSOLE_MESSAGE("\r\n");

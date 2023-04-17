@@ -149,7 +149,7 @@ bool threadALS(void)
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
     int count=0;
     bool data_judge = False;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     uint8_t pwron[1];
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
     pwron[0] = 0x01;
@@ -183,7 +183,7 @@ bool threadALS(void)
 }        
 bool threadGPIO(void)
 {
-    int GPIO_Now=GPIO_PC22_Get();
+    int GPIO_Now= 0;//GPIO_PC22_Get();
     //bool data_judge = False;
     if (GPIO_PreStatus != GPIO_Now)
     {

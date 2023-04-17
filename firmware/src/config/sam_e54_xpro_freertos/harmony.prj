@@ -202,8 +202,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">C4F8622FFD2ED67EB4CAE29184BA3BD9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B294F508C2814FB16209E36686B91E30</UserChecksum>
+          <GeneratedChecksum dnOrder="5">2931B2EBFE48EB70A47D3C6E4B3F5B11</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AEA115B4A66DAFEC8A91D53863D1A971</UserChecksum>
         </File>
         <File dnOrder="22">
           <Type dnOrder="0">SOURCE</Type>
@@ -211,8 +211,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">0F940998FCC16AC87BD70868E60B02E7</GeneratedChecksum>
-          <UserChecksum dnOrder="6">0F940998FCC16AC87BD70868E60B02E7</UserChecksum>
+          <GeneratedChecksum dnOrder="5">C829164417B04C5CE119FC713D03CFBE</GeneratedChecksum>
+          <UserChecksum dnOrder="6">C829164417B04C5CE119FC713D03CFBE</UserChecksum>
         </File>
         <File dnOrder="23">
           <Type dnOrder="0">SOURCE</Type>
@@ -319,8 +319,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">DA54E2CF80BBF688FF11DDCD811F8D75</GeneratedChecksum>
-          <UserChecksum dnOrder="6">DA54E2CF80BBF688FF11DDCD811F8D75</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5A699E3AAC746821A34FE7EFA9BE23D1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5A699E3AAC746821A34FE7EFA9BE23D1</UserChecksum>
         </File>
         <File dnOrder="35">
           <Type dnOrder="0">SOURCE</Type>
@@ -355,8 +355,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/nvic/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/nvic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4939E1A158B6092BA81DE8B32EC0D6D9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4939E1A158B6092BA81DE8B32EC0D6D9</UserChecksum>
+          <GeneratedChecksum dnOrder="5">934FA9204306FF5C0AC1C8B95908F14B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">934FA9204306FF5C0AC1C8B95908F14B</UserChecksum>
         </File>
         <File dnOrder="39">
           <Type dnOrder="0">SOURCE</Type>
@@ -382,8 +382,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">94F24BA4B9D05FE3F0BAEF8FDF7AC14F</GeneratedChecksum>
-          <UserChecksum dnOrder="6">94F24BA4B9D05FE3F0BAEF8FDF7AC14F</UserChecksum>
+          <GeneratedChecksum dnOrder="5">D489E1672023C5BF2D0DB9A51C34AC90</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D489E1672023C5BF2D0DB9A51C34AC90</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">SOURCE</Type>
@@ -400,10 +400,19 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">FD1390426654B6DACF653E1499EE4A85</GeneratedChecksum>
-          <UserChecksum dnOrder="6">38279F2EF98406AE38E0924300E91062</UserChecksum>
+          <GeneratedChecksum dnOrder="5">DF209C94267EB9713D054E82286DAF65</GeneratedChecksum>
+          <UserChecksum dnOrder="6">DBFE585122669D7660368327062588D9</UserChecksum>
         </File>
         <File dnOrder="44">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_sercom1_i2c_master.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/i2c_master/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/sercom/i2c_master/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D023324C05E67A7F55FF3BB0D75C225C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A2E7F68624E65EB2695BA9CDE8930544</UserChecksum>
+        </File>
+        <File dnOrder="45">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_sercom2_usart.c</Name>
           <Security dnOrder="2">NON_SECURE</Security>
@@ -412,7 +421,7 @@
           <GeneratedChecksum dnOrder="5">407854E283E6C838F124A620412E32AC</GeneratedChecksum>
           <UserChecksum dnOrder="6">407854E283E6C838F124A620412E32AC</UserChecksum>
         </File>
-        <File dnOrder="45">
+        <File dnOrder="46">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_sercom3_i2c_master.c</Name>
           <Security dnOrder="2">NON_SECURE</Security>
@@ -421,7 +430,7 @@
           <GeneratedChecksum dnOrder="5">B25D3E6FB043CFBA76432779EE893907</GeneratedChecksum>
           <UserChecksum dnOrder="6">71667D41CE68303985FF98717B1C6470</UserChecksum>
         </File>
-        <File dnOrder="46">
+        <File dnOrder="47">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_sercom5_usart.c</Name>
           <Security dnOrder="2">NON_SECURE</Security>
@@ -429,15 +438,6 @@
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">2DCE22D06B75AC9F298EFF0D7FBBA9A9</GeneratedChecksum>
           <UserChecksum dnOrder="6">2DCE22D06B75AC9F298EFF0D7FBBA9A9</UserChecksum>
-        </File>
-        <File dnOrder="47">
-          <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">plib_sercom7_i2c_master.c</Name>
-          <Security dnOrder="2">NON_SECURE</Security>
-          <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/i2c_master/</LogicalPath>
-          <PhysicalPath dnOrder="4">/peripheral/sercom/i2c_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">E12B1E04F8DDAFC794D94DC805CC653B</GeneratedChecksum>
-          <UserChecksum dnOrder="6">67238918098D2DF2678DB898D841DE91</UserChecksum>
         </File>
         <File dnOrder="48">
           <Type dnOrder="0">SOURCE</Type>
@@ -1003,8 +1003,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">AE3AA81C3CA3B1785504553945F91A13</GeneratedChecksum>
-          <UserChecksum dnOrder="6">ADACC530FD58FC5AC4CF4DA2112CCC99</UserChecksum>
+          <GeneratedChecksum dnOrder="5">3257E7795CECA3CA1753E2E049D1BC7C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">32D71B9DC404CE58EBC9DE03740DC454</UserChecksum>
         </File>
         <File dnOrder="111">
           <Type dnOrder="0">HEADER</Type>
@@ -2056,8 +2056,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">AC56AFFB70259D393D240E85C34272CE</GeneratedChecksum>
-          <UserChecksum dnOrder="6">AC56AFFB70259D393D240E85C34272CE</UserChecksum>
+          <GeneratedChecksum dnOrder="5">504E4D43861382FC4D3D9DADE902A621</GeneratedChecksum>
+          <UserChecksum dnOrder="6">504E4D43861382FC4D3D9DADE902A621</UserChecksum>
         </File>
         <File dnOrder="228">
           <Type dnOrder="0">HEADER</Type>
@@ -2079,6 +2079,15 @@
         </File>
         <File dnOrder="230">
           <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_sercom1_i2c_master.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/i2c_master/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/sercom/i2c_master/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">1030BC1CF8B7EFA12768A1B2D823302D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B44D98393202483225409B89B4D0316F</UserChecksum>
+        </File>
+        <File dnOrder="231">
+          <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_sercom2_usart.h</Name>
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/usart/</LogicalPath>
@@ -2086,7 +2095,7 @@
           <GeneratedChecksum dnOrder="5">5918A5D1BACBE04FC667A4255E7CC97C</GeneratedChecksum>
           <UserChecksum dnOrder="6">5918A5D1BACBE04FC667A4255E7CC97C</UserChecksum>
         </File>
-        <File dnOrder="231">
+        <File dnOrder="232">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_sercom3_i2c_master.h</Name>
           <Security dnOrder="2">NON_SECURE</Security>
@@ -2095,7 +2104,7 @@
           <GeneratedChecksum dnOrder="5">EE37003D8B226AA7F959E094775D84D3</GeneratedChecksum>
           <UserChecksum dnOrder="6">1FA89EB9D4D72995B87F43B6CF8E4C67</UserChecksum>
         </File>
-        <File dnOrder="232">
+        <File dnOrder="233">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_sercom5_usart.h</Name>
           <Security dnOrder="2">NON_SECURE</Security>
@@ -2103,15 +2112,6 @@
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">8FCF87489C52EC5F0EC90FEE597E0EEC</GeneratedChecksum>
           <UserChecksum dnOrder="6">8FCF87489C52EC5F0EC90FEE597E0EEC</UserChecksum>
-        </File>
-        <File dnOrder="233">
-          <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">plib_sercom7_i2c_master.h</Name>
-          <Security dnOrder="2">NON_SECURE</Security>
-          <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/i2c_master/</LogicalPath>
-          <PhysicalPath dnOrder="4">/peripheral/sercom/i2c_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">EA9EB46247552490C3E497F64234A011</GeneratedChecksum>
-          <UserChecksum dnOrder="6">BC298E8E5BDB39E333819679A07D4E8D</UserChecksum>
         </File>
         <File dnOrder="234">
           <Type dnOrder="0">HEADER</Type>

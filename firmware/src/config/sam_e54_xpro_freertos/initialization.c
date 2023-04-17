@@ -99,23 +99,23 @@ static DRV_I2C_TRANSFER_OBJ drvI2C0TransferObj[DRV_I2C_QUEUE_SIZE_IDX0];
 const DRV_I2C_PLIB_INTERFACE drvI2C0PLibAPI = {
 
     /* I2C PLib Transfer Read Add function */
-    .read = (DRV_I2C_PLIB_READ)SERCOM7_I2C_Read,
+    .read = (DRV_I2C_PLIB_READ)SERCOM1_I2C_Read,
 
     /* I2C PLib Transfer Write Add function */
-    .write = (DRV_I2C_PLIB_WRITE)SERCOM7_I2C_Write,
+    .write = (DRV_I2C_PLIB_WRITE)SERCOM1_I2C_Write,
 
 
     /* I2C PLib Transfer Write Read Add function */
-    .writeRead = (DRV_I2C_PLIB_WRITE_READ)SERCOM7_I2C_WriteRead,
+    .writeRead = (DRV_I2C_PLIB_WRITE_READ)SERCOM1_I2C_WriteRead,
 
     /* I2C PLib Transfer Status function */
-    .errorGet = (DRV_I2C_PLIB_ERROR_GET)SERCOM7_I2C_ErrorGet,
+    .errorGet = (DRV_I2C_PLIB_ERROR_GET)SERCOM1_I2C_ErrorGet,
 
     /* I2C PLib Transfer Setup function */
-    .transferSetup = (DRV_I2C_PLIB_TRANSFER_SETUP)SERCOM7_I2C_TransferSetup,
+    .transferSetup = (DRV_I2C_PLIB_TRANSFER_SETUP)SERCOM1_I2C_TransferSetup,
 
     /* I2C PLib Callback Register */
-    .callbackRegister = (DRV_I2C_PLIB_CALLBACK_REGISTER)SERCOM7_I2C_CallbackRegister,
+    .callbackRegister = (DRV_I2C_PLIB_CALLBACK_REGISTER)SERCOM1_I2C_CallbackRegister,
 };
 
 
@@ -125,10 +125,10 @@ const DRV_I2C_INTERRUPT_SOURCES drvI2C0InterruptSources =
     .isSingleIntSrc                        = false,
 
     /* Peripheral interrupt lines */
-    .intSources.multi.i2cInt0          = SERCOM7_0_IRQn,
-    .intSources.multi.i2cInt1          = SERCOM7_1_IRQn,
-    .intSources.multi.i2cInt2          = SERCOM7_2_IRQn,
-    .intSources.multi.i2cInt3          = SERCOM7_OTHER_IRQn,
+    .intSources.multi.i2cInt0          = SERCOM1_0_IRQn,
+    .intSources.multi.i2cInt1          = SERCOM1_1_IRQn,
+    .intSources.multi.i2cInt2          = SERCOM1_2_IRQn,
+    .intSources.multi.i2cInt3          = SERCOM1_OTHER_IRQn,
 };
 
 /* I2C Driver Initialization Data */
@@ -638,11 +638,11 @@ void SYS_Initialize ( void* data )
 
     SERCOM2_USART_Initialize();
 
+    SERCOM1_I2C_Initialize();
+
     EVSYS_Initialize();
 
     SERCOM0_USART_Initialize();
-
-    SERCOM7_I2C_Initialize();
 
     PM_Initialize();
 

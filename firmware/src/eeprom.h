@@ -131,6 +131,10 @@ typedef struct _EEPROM_USER_DATA_ {
     //EEPAls_table Als_table_data[8];
 } EEPROMData;       // total 946 byte
 
+typedef struct _EEPROM_USER_DATA_POC_ {
+    uint8_t ucminute;
+	uint32_t uchour;
+} EEPROMData_POC;       // total 946 byte
 //extern GroupData GroupDataDefault;
 //extern EEPROMData EEDataDefault;
     // *****************************************************************************
@@ -226,6 +230,8 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size);
 void EEPROM_Write_LCW(uint16_t i2c1_ctrl_addr,size_t size);
 uint32_t  EEPROM_Read_Data(uint16_t i2c1_ctrl_addr,EEPROMData *pdata);
 void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr);
+uint32_t  EEPROM_Read_Data_POC(uint16_t i2c1_ctrl_addr,EEPROMData_POC *pdata);
+void EEPROM_Write_Data_POC(uint16_t i2c1_ctrl_addr,EEPROMData_POC *ptr);
     /* Provide C++ Compatibility */
 #ifdef __cplusplus
 }

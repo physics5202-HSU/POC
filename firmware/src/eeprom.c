@@ -229,7 +229,10 @@ EEPROMData EEDataDefault = {
     .Als_table_data[7].ALSTABLE_MSB = 0x00, .Als_table_data[7].ALSTABLE_LSB = 0x00 
 #endif            
 };
-
+EEPROMData_POC EEDataDefault_POC = {
+.ucminute = 0x00,
+.uchour = 0x00000000,
+};
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Local Functions                                                   */
@@ -243,7 +246,7 @@ uint16_t EEPROM_Read(uint8_t i2c1_ctrl_addr)
 {    
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
     int count=0;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     //------------power on--------------
 
     //------------One Time Measure 4Lx, 16ms--------------
@@ -255,10 +258,10 @@ uint16_t EEPROM_Read(uint8_t i2c1_ctrl_addr)
     //myData[2]=0;
     //uint8_t *myData_1 = calloc(2, sizeof (uint8_t));    
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
-    SERCOM7_I2C_Read(i2c1_ctrl_addr, &myData[0], 2);
+    SERCOM1_I2C_Read(i2c1_ctrl_addr, &myData[0], 2);
 #if 0    
-    if(!SERCOM7_I2C_Read(i2c1_ctrl_addr, &myData[0], 3))
-    //if(!SERCOM7_I2C_Read(i2c1_ctrl_addr, myData_1, 2))    
+    if(!SERCOM1_I2C_Read(i2c1_ctrl_addr, &myData[0], 3))
+    //if(!SERCOM1_I2C_Read(i2c1_ctrl_addr, myData_1, 2))    
 	{
 		return 0xFFFF;
 	}
@@ -281,7 +284,7 @@ uint16_t EEPROM_Read(uint8_t i2c1_ctrl_addr)
 uint16_t EEPROM_Write(uint8_t i2c1_ctrl_addr)
 {
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     uint8_t myData[3];
     //uint8_t *myData_1 = calloc(2, sizeof (uint8_t));
     //myData_1[0]=0x55;
@@ -292,8 +295,10 @@ uint16_t EEPROM_Write(uint8_t i2c1_ctrl_addr)
     //myData[3]=0x44;
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
     //GPIO_PB00_Clear();
-    SERCOM7_I2C_Write(i2c1_ctrl_addr, &myData[1], 2);
+    //GPIO_PC01_Clear();
+    SERCOM1_I2C_Write(i2c1_ctrl_addr, &myData[1], 2);
     //GPIO_PB00_Set();
+    //GPIO_PC01_Set();
     int count=0;
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
     {
@@ -309,7 +314,7 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size)
 {
     int count=0;
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     uint32_t ret;
     //------------Get(Read) Data--------------
     uint8_t myData_lcw[8];
@@ -318,7 +323,8 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size)
     datareadaddr[0] = (uint8_t)((i2c1_ctrl_addr & 0xFF00) >> 8);  //MSB
     datareadaddr[1] = (uint8_t)(i2c1_ctrl_addr & 0x00FF);   //LSB
     //GPIO_PB00_Set();
-    ret = SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
+    //GPIO_PC01_Set();
+    ret = SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
     {
         count++;
@@ -326,6 +332,7 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size)
             break;
     }
     //GPIO_PB00_Clear();
+    //GPIO_PC01_Clear();
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
     myData_lcw[0]=0x00;
     myData_lcw[1]=0x00;
@@ -336,7 +343,8 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size)
     myData_lcw[6]=0x00;
     myData_lcw[7]=0x00;
     //GPIO_PB00_Set();
-    ret = SERCOM7_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw,size);
+    //GPIO_PC01_Set();
+    ret = SERCOM1_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw,size);
     count=0;
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
     {
@@ -345,6 +353,7 @@ uint32_t  EEPROM_Read_LCW(uint16_t i2c1_ctrl_addr,uint8_t *pdata,size_t size)
             break;
     }
     //GPIO_PB00_Clear();
+    //GPIO_PC01_Clear();
     SERCOM0_USART_Write(&myData_lcw[0], size);
     return ret;    
 }
@@ -354,7 +363,7 @@ void EEPROM_Write_LCW(uint16_t i2c1_ctrl_addr,size_t size)
     int count=0;
     uint8_t datatmp[8];
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
      datatmp[0] = (uint8_t)((i2c1_ctrl_addr & 0xFF00) >> 8);  //MSB
      datatmp[1] = (uint8_t)(i2c1_ctrl_addr & 0x00FF);   //LSB
@@ -365,26 +374,29 @@ void EEPROM_Write_LCW(uint16_t i2c1_ctrl_addr,size_t size)
      datatmp[6] = 0x55;
      datatmp[7] = 0x37;
     //GPIO_PB00_Set();
-    GPIO_PB00_Clear(); //WC disable
-    SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp,size+2);
-    //SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp,size+2);
+    //GPIO_PC01_Set();
+    //GPIO_PB00_Clear(); //WC disable
+    GPIO_PC01_Clear(); //WC disable
+    SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp,size+2);
+    //SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp,size+2);
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
     {
         count++;
         if(count > I2C_Delay_ns)
             break;
     }
-    GPIO_PB00_Set();  //WC enable
-    //GPIO_PB00_Clear();   
+    //GPIO_PB00_Set();  //WC enable
+    GPIO_PC01_Set();  //WC enable
+    //GPIO_PB00_Clear();
+    //GPIO_PC01_Clear(); 
 }
-
 uint32_t  EEPROM_Read_Data(uint16_t i2c1_ctrl_addr,EEPROMData *pdata)
 {
     int count=0;
     uint16_t pageaddr_reg;
     uint16_t remainder;
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     uint32_t ret;
     //------------Get(Read) Data--------------
     uint16_t datasize = sizeof(EEPROMData);
@@ -406,7 +418,7 @@ if(datasize > 0x7F){
         for(int i=0;i<remainder;i++)
         {
             transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
-            ret = SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
+            ret = SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
             for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
             while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
             {
@@ -415,7 +427,7 @@ if(datasize > 0x7F){
                     break;
             }
             transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
-            ret = SERCOM7_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw_EEPage,128);
+            ret = SERCOM1_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw_EEPage,128);
             for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
             count=0;
             while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
@@ -435,7 +447,7 @@ if(datasize > 0x7F){
            datareadaddr[1] = (uint8_t)(pageaddr_reg & 0x00FF);   //LSB            
         }
 }else{
-    ret = SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
+    ret = SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
     {
         count++;
@@ -443,7 +455,7 @@ if(datasize > 0x7F){
             break;
     }   
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
-    ret = SERCOM7_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw,128);
+    ret = SERCOM1_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw,128);
     for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
     count=0;
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
@@ -470,7 +482,7 @@ void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr)
     uint8_t *datatmp_write = calloc(datasize+2, sizeof(uint8_t *));
     uint8_t *datatmp_1page = calloc(128+2, sizeof(uint8_t *));
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
-    SERCOM7_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
     transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
     datatmp_write[0] = (uint8_t)((i2c1_ctrl_addr & 0xFF00) >> 8);  //MSB
     datatmp_write[1] = (uint8_t)(i2c1_ctrl_addr & 0x00FF);   //LSB
@@ -487,7 +499,8 @@ void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr)
     SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[1]);     
     SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[2]);
     SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[3]);    
-    GPIO_PB00_Clear(); //WC disable
+    //GPIO_PB00_Clear(); //WC disable
+    GPIO_PC01_Clear(); //WC disable
     pageaddr_reg = i2c1_ctrl_addr;
     remainder = 0;
     
@@ -505,7 +518,7 @@ void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr)
                 {
                     datatmp_1page[j] = datatmp_write[j+128*i];
                 } 
-           SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR,&datatmp_1page[0],128+2);
+           SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,&datatmp_1page[0],128+2);
            for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
            while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
            {
@@ -521,7 +534,7 @@ void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr)
         }
         
     }else{
-        SERCOM7_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp_write,datasize+2);
+        SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp_write,datasize+2);
         for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
     }
     while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
@@ -530,7 +543,166 @@ void EEPROM_Write_Data(uint16_t i2c1_ctrl_addr,EEPROMData *ptr)
         if(count > I2C_Delay_ns)
             break;
     }
-    GPIO_PB00_Set();  //WC enable   
+    //GPIO_PB00_Set();  //WC enable
+    GPIO_PC01_Set();  //WC enable
+    free(datatmp);
+    free(datatmp_write);
+}
+uint32_t  EEPROM_Read_Data_POC(uint16_t i2c1_ctrl_addr,EEPROMData_POC *pdata)
+{
+    int count=0;
+    uint16_t pageaddr_reg;
+    uint16_t remainder;
+    volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    uint32_t ret;
+    //------------Get(Read) Data--------------
+    uint16_t datasize = sizeof(EEPROMData_POC);
+    //uint8_t myData_lcw[datasize];
+    uint8_t *myData_lcw = calloc(datasize, sizeof(uint8_t *));
+    uint8_t *myData_lcw_EEPage = calloc(128, sizeof(uint8_t *)); 
+    uint8_t datareadaddr[2];
+    transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
+    datareadaddr[0] = (uint8_t)((i2c1_ctrl_addr & 0xFF00) >> 8);  //MSB
+    datareadaddr[1] = (uint8_t)(i2c1_ctrl_addr & 0x00FF);   //LSB
+    pageaddr_reg = i2c1_ctrl_addr;
+    remainder = 0;
+//////////////////////////////////////////////////////////////////////////// 
+if(datasize > 0x7F){
+         remainder = datasize/128 + 1;
+        //if((datasize%128) != 0){
+            //remainder++;
+        //}
+        for(int i=0;i<remainder;i++)
+        {
+            transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
+            ret = SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
+            for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+            while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+            {
+                count++;
+                if(count > I2C_Delay_ns)
+                    break;
+            }
+            transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
+            ret = SERCOM1_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw_EEPage,128);
+            for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
+            count=0;
+            while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+            {
+                count++;
+                if(count > I2C_Delay_ns)
+                    break;
+            }
+            for(int j=0;j<128;j++)
+            {            
+                myData_lcw[j+(128*i)] = myData_lcw_EEPage[j];
+            }
+            //SERCOM0_USART_Write(&myData_lcw[0], 3);   //test
+            //for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+           pageaddr_reg = pageaddr_reg +128;
+           datareadaddr[0] = (uint8_t)((pageaddr_reg & 0xFF00) >> 8);  //MSB
+           datareadaddr[1] = (uint8_t)(pageaddr_reg & 0x00FF);   //LSB            
+        }
+}else{
+    ret = SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR, datareadaddr, 2);
+    while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+    {
+        count++;
+        if(count > I2C_Delay_ns)
+            break;
+    }   
+    transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
+    ret = SERCOM1_I2C_Read(EEPROM_1_CTRL_ADDR,myData_lcw,128);
+    for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
+    count=0;
+    while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+    {
+        count++;
+        if(count > I2C_Delay_ns)
+            break;
+    }    
+}    
+/////////////////////////////////////////////////////////////////////////////////////////    
+    memcpy(pdata,myData_lcw,datasize);
+    free(myData_lcw);
+    free(myData_lcw_EEPage);
+    return ret;    
+}
+
+void EEPROM_Write_Data_POC(uint16_t i2c1_ctrl_addr,EEPROMData_POC *ptr)
+{
+    int count=0;
+    uint16_t remainder;
+    uint16_t pageaddr_reg;
+    uint16_t datasize = sizeof(EEPROMData_POC);
+    uint8_t *datatmp = calloc(datasize, sizeof(uint8_t *));
+    uint8_t *datatmp_write = calloc(datasize+2, sizeof(uint8_t *));
+    uint8_t *datatmp_1page = calloc(128+2, sizeof(uint8_t *));
+    volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
+    SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
+    transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;    
+    datatmp_write[0] = (uint8_t)((i2c1_ctrl_addr & 0xFF00) >> 8);  //MSB
+    datatmp_write[1] = (uint8_t)(i2c1_ctrl_addr & 0x00FF);   //LSB
+    //SYS_CONSOLE_PRINT("ptr = %x",ptr);    //address  200188c0   //  ptr+1    20018c72     =  200188c0 +3b2     
+    //SYS_CONSOLE_PRINT("ptr = %x", ptr->DATA[0].group[1]);
+    //datatmp = *(uint8_t *)ptr;
+    memcpy(datatmp,ptr,datasize); 
+    //SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp[0]);
+    for(int i=2;i<(datasize+2);i++)
+    {
+      datatmp_write[i] = datatmp[i-2];
+    }  
+    SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[0]);
+    SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[1]);     
+    SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[2]);
+    SYS_CONSOLE_PRINT("ptr1 = %x\r\n", datatmp_write[3]);    
+    //GPIO_PB00_Clear(); //WC disable
+    GPIO_PC01_Clear(); //WC disable
+    pageaddr_reg = i2c1_ctrl_addr;
+    remainder = 0;
+    
+    if(datasize > 0x7F){
+        remainder = datasize/128+1;
+        //if((datasize%128) > 0){
+           // remainder++;
+       // }
+        for(int i=0;i<remainder;i++)
+        {
+            transferStatusCmd = I2C1_TRANSFER_STATUS_IN_PROGRESS;
+               datatmp_1page[0] = datatmp_write[0];
+               datatmp_1page[1] = datatmp_write[1];
+               for(int j=2;j<130;j++)
+                {
+                    datatmp_1page[j] = datatmp_write[j+128*i];
+                } 
+           SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,&datatmp_1page[0],128+2);
+           for (uint32_t i = 0; i < 50000; i++);//1ns*20000=2ms
+           while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+           {
+            count++;
+            if(count > I2C_Delay_ns)
+            break;
+            }
+           //SERCOM0_USART_Write(&datatmp_1page[0], 3);   //test
+           pageaddr_reg = pageaddr_reg +128;
+           datatmp_write[0] = (uint8_t)((pageaddr_reg & 0xFF00) >> 8);  //MSB
+           datatmp_write[1] = (uint8_t)(pageaddr_reg & 0x00FF);   //LSB
+           
+        }
+        
+    }else{
+        SERCOM1_I2C_Write(EEPROM_1_CTRL_ADDR,datatmp_write,datasize+2);
+        for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+    }
+    while (transferStatusCmd != I2C1_TRANSFER_STATUS_SUCCESS)
+    {
+        count++;
+        if(count > I2C_Delay_ns)
+            break;
+    }
+    //GPIO_PB00_Set();  //WC enable
+    GPIO_PC01_Set();  //WC enable
     free(datatmp);
     free(datatmp_write);
 }
