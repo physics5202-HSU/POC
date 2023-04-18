@@ -633,6 +633,8 @@ void SYS_Initialize ( void* data )
 
     TC0_TimerInitialize();
 
+    TC3_TimerInitialize();
+
     ADC0_Initialize();
     SERCOM3_I2C_Initialize();
 

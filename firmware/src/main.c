@@ -71,7 +71,25 @@ static void rtcEventHandler (RTC_TIMER32_INT_MASK intCause, uintptr_t context)
 		timeElapsedOneSec();
 	}
 }
-
+void TC3_Callback_InterruptHandler(TC_TIMER_STATUS status, uintptr_t context)
+{
+    //GPIO_PB01_Toggle();
+    Second_poc = Second_poc+1;
+    //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
+    //SYS_CONSOLE_PRINT("Second = %d\r\n", Second_poc);   
+    if(Second_poc == 0x3c)
+    {
+        Second_poc = 0; 
+       EEData_POC.ucminute = EEData_POC.ucminute + 1;
+       //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
+       if(EEData_POC.ucminute == 0x3c)
+       {
+           EEData_POC.ucminute = 0;
+           EEData_POC.uchour = EEData_POC.uchour + 1;
+       }
+       
+    }   
+}
 #if 0
 void TC3_Overflow(TC_COMPARE_STATUS status, uintptr_t context)
 {
@@ -115,6 +133,10 @@ int main ( void )
     Second_poc = 0;
     //TC3_CompareCallbackRegister( TC3_Overflow, (uintptr_t )NULL );
     //TC3_CompareStart();
+    /* Register callback function for TC0 period interrupt */
+    TC3_TimerCallbackRegister(TC3_Callback_InterruptHandler, (uintptr_t)NULL);  
+    /* Start the timer channel 0*/
+    TC3_TimerStart();    
     Als_Crlon = 0;
     Als_Demo01 = 0;
     Als_Demo02 = 0;

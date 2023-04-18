@@ -45,7 +45,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC3_H       // Guards against multiple inclusion
+#ifndef PLIB_TC3_H      // Guards against multiple inclusion
 #define PLIB_TC3_H
 
 // *****************************************************************************
@@ -85,30 +85,31 @@
    this interface.
 */
 
+// *****************************************************************************
 
-void TC3_CompareInitialize( void );
+void TC3_TimerInitialize( void );
 
-void TC3_CompareStart( void );
+void TC3_TimerStart( void );
 
-void TC3_CompareStop( void );
+void TC3_TimerStop( void );
 
-uint32_t TC3_CompareFrequencyGet( void );
+uint32_t TC3_TimerFrequencyGet( void );
 
-void TC3_Compare16bitPeriodSet( uint16_t period );
 
-uint16_t TC3_Compare16bitPeriodGet( void );
+void TC3_Timer16bitPeriodSet( uint16_t period );
 
-uint16_t TC3_Compare16bitCounterGet( void );
+uint16_t TC3_Timer16bitPeriodGet( void );
 
-void TC3_Compare16bitCounterSet( uint16_t count );
+uint16_t TC3_Timer16bitCounterGet( void );
 
-void TC3_Compare16bitMatch0Set( uint16_t compareValue );
-
-void TC3_Compare16bitMatch1Set( uint16_t compareValue );
+void TC3_Timer16bitCounterSet( uint16_t count );
 
 
 
-void TC3_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context );
+
+void TC3_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context );
+
+
 
 
 

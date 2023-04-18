@@ -61,7 +61,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-TC_COMPARE_CALLBACK_OBJ TC3_CallbackObject;
+TC_TIMER_CALLBACK_OBJ TC3_CallbackObject;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,8 +69,9 @@ TC_COMPARE_CALLBACK_OBJ TC3_CallbackObject;
 // *****************************************************************************
 // *****************************************************************************
 
-/* Initialize TC module in Compare Mode */
-void TC3_CompareInitialize( void )
+// *****************************************************************************
+/* Initialize the TC module in Timer mode */
+void TC3_TimerInitialize( void )
 {
     /* Reset TC */
     TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_SWRST_Msk;
@@ -81,20 +82,21 @@ void TC3_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_PRESCSYNC_PRESC ;
+    TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1024 | TC_CTRLA_PRESCSYNC_PRESC ;
 
-    /* Configure waveform generation mode */
-    TC3_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MFRQ;
+    /* Configure in Match Frequency Mode */
+    TC3_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
-
-    TC3_REGS->COUNT16.TC_CC[0] = 1U;
+    /* Configure timer period */
+    TC3_REGS->COUNT16.TC_CC[0U] = 976U;
 
     /* Clear all interrupt flags */
     TC3_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
-    /* Enable period Interrupt */
     TC3_CallbackObject.callback = NULL;
+    /* Enable interrupt*/
     TC3_REGS->COUNT16.TC_INTENSET = TC_INTENSET_OVF_Msk;
+
 
     while((TC3_REGS->COUNT16.TC_SYNCBUSY))
     {
@@ -102,8 +104,8 @@ void TC3_CompareInitialize( void )
     }
 }
 
-/* Enable the counter */
-void TC3_CompareStart( void )
+/* Enable the TC counter */
+void TC3_TimerStart( void )
 {
     TC3_REGS->COUNT16.TC_CTRLA |= TC_CTRLA_ENABLE_Msk;
     while((TC3_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
@@ -112,8 +114,8 @@ void TC3_CompareStart( void )
     }
 }
 
-/* Disable the counter */
-void TC3_CompareStop( void )
+/* Disable the TC counter */
+void TC3_TimerStop( void )
 {
     TC3_REGS->COUNT16.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
     while((TC3_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
@@ -122,13 +124,13 @@ void TC3_CompareStop( void )
     }
 }
 
-uint32_t TC3_CompareFrequencyGet( void )
+uint32_t TC3_TimerFrequencyGet( void )
 {
-    return (uint32_t)(0UL);
+    return (uint32_t)(976UL);
 }
 
-/* Get the current counter value */
-uint16_t TC3_Compare16bitCounterGet( void )
+/* Get the current timer counter value */
+uint16_t TC3_Timer16bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
     TC3_REGS->COUNT16.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
@@ -147,8 +149,8 @@ uint16_t TC3_Compare16bitCounterGet( void )
     return (uint16_t)TC3_REGS->COUNT16.TC_COUNT;
 }
 
-/* Configure counter value */
-void TC3_Compare16bitCounterSet( uint16_t count )
+/* Configure timer counter value */
+void TC3_Timer16bitCounterSet( uint16_t count )
 {
     TC3_REGS->COUNT16.TC_COUNT = count;
 
@@ -158,68 +160,42 @@ void TC3_Compare16bitCounterSet( uint16_t count )
     }
 }
 
-/* Configure period value */
-void TC3_Compare16bitPeriodSet( uint16_t period )
+/* Configure timer period */
+void TC3_Timer16bitPeriodSet( uint16_t period )
 {
-    /* Configure period value */
-    TC3_REGS->COUNT16.TC_CCBUF[0] = period;
+    TC3_REGS->COUNT16.TC_CC[0] = period;
     while((TC3_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
     }
 }
 
-/* Read period value */
-uint16_t TC3_Compare16bitPeriodGet( void )
+/* Read the timer period value */
+uint16_t TC3_Timer16bitPeriodGet( void )
 {
-    /* Get period value */
     return (uint16_t)TC3_REGS->COUNT16.TC_CC[0];
 }
-
-/* Configure duty cycle value */
-void TC3_Compare16bitMatch0Set( uint16_t compareValue )
-{
-    /* Set new compare value for compare channel 0 */
-    TC3_REGS->COUNT16.TC_CCBUF[0] = compareValue;
-    while((TC3_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
-    {
-        /* Wait for Write Synchronization */
-    }
-}
-
-/* Configure duty cycle value */
-void TC3_Compare16bitMatch1Set( uint16_t compareValue )
-{
-    /* Set new compare value for compare channel 1 */
-    TC3_REGS->COUNT16.TC_CCBUF[1] = compareValue;
-    while((TC3_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
-    {
-        /* Wait for Write Synchronization */
-    }
-}
-
-
 
 
 
 /* Register callback function */
-void TC3_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context )
+void TC3_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context )
 {
     TC3_CallbackObject.callback = callback;
 
     TC3_CallbackObject.context = context;
 }
 
-/* Compare match interrupt handler */
-void TC3_CompareInterruptHandler( void )
+/* Timer Interrupt handler */
+void TC3_TimerInterruptHandler( void )
 {
     if (TC3_REGS->COUNT16.TC_INTENSET != 0)
     {
-        TC_COMPARE_STATUS status;
-        status = TC3_REGS->COUNT16.TC_INTFLAG;
-        /* clear period interrupt */
+        TC_TIMER_STATUS status;
+        status = (TC_TIMER_STATUS) TC3_REGS->COUNT16.TC_INTFLAG;
+        /* Clear interrupt flags */
         TC3_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
-        if((status != TC_COMPARE_STATUS_NONE) && TC3_CallbackObject.callback != NULL)
+        if((status != TC_TIMER_STATUS_NONE) && TC3_CallbackObject.callback != NULL)
         {
             TC3_CallbackObject.callback(status, TC3_CallbackObject.context);
         }

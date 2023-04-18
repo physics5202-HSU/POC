@@ -1220,13 +1220,16 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
             break;
         case INX_PC_TIME:
                 if(cmddataString_PC[5] == '1')
-                {            
+                { 
+                    EEData_POC.ucminute = 0x3B;
+#if 0  
                     test[0] = EEData_POC.ucminute;
                     test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
                     test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
                     test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
                     test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
                     SERCOM0_USART_Write(&test[0], 5);
+#endif                    
                 }   
             break;            
         case INX_PC_EERM:
@@ -1240,7 +1243,7 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
                 {
                     //EEData_POC.ucminute = 0x3c;
                     //EEData_POC.uchour = 0x01020304;
-                    EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    //EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
                     test[0] = EEData_POC.ucminute;
                     test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
                     test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);

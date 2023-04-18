@@ -173,7 +173,7 @@ void TCC4_MC1_Handler           ( void ) __attribute__((weak, alias("Dummy_Handl
 void TC0_TimerInterruptHandler  ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC3_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC3_TimerInterruptHandler  ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC4_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC5_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC6_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -330,7 +330,7 @@ const DeviceVectors exception_table=
     .pfnTC0_Handler                = ( void * ) TC0_TimerInterruptHandler,
     .pfnTC1_Handler                = ( void * ) TC1_Handler,
     .pfnTC2_Handler                = ( void * ) TC2_Handler,
-    .pfnTC3_Handler                = ( void * ) TC3_Handler,
+    .pfnTC3_Handler                = ( void * ) TC3_TimerInterruptHandler,
     .pfnTC4_Handler                = ( void * ) TC4_Handler,
     .pfnTC5_Handler                = ( void * ) TC5_Handler,
     .pfnTC6_Handler                = ( void * ) TC6_Handler,

@@ -51,6 +51,7 @@
 #include "peripheral/nvmctrl/plib_nvmctrl.h"
 #include "peripheral/rtc/plib_rtc.h"
 #include "peripheral/tc/plib_tc0.h"
+#include "peripheral/tc/plib_tc3.h"
 #include "driver/i2c/drv_i2c.h"
 #include "system/time/sys_time.h"
 #include "peripheral/adc/plib_adc0.h"

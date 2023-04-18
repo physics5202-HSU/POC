@@ -229,6 +229,7 @@
             <logicalFolder name="f3" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc_common.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc0.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc3.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f13" displayName="tcc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tcc/plib_tcc0.h</itemPath>
@@ -409,8 +410,9 @@
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_Percy_20220714.xml</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_Percy_20220726.xml</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230330.xml</itemPath>
-      <itemPath>../src/config/sam_e54_xpro_freertos/harmony.prj</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230417.xml</itemPath>
+      <itemPath>../src/config/sam_e54_xpro_freertos/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230417_timer.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
@@ -527,6 +529,7 @@
             </logicalFolder>
             <logicalFolder name="f3" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc0.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc3.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f13" displayName="tcc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tcc/plib_tcc0.c</itemPath>
