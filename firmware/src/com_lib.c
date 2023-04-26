@@ -1530,8 +1530,8 @@ Message parsingCommand(uint8_t *RS232RxBuffer, size_t RS232RxBufSize) {
 }
 Message parsingCommand_SERCOM0_LCW(uint8_t *RxBuffer, size_t RxBufSize)
 {
-    SYS_CONSOLE_PRINT("[%d]", count_secom0);
-    SYS_CONSOLE_PRINT("[%d][%d]", count_papapa,count_lcw);
+    //SYS_CONSOLE_PRINT("[%d]", count_secom0);
+    //SYS_CONSOLE_PRINT("[%d][%d]", count_papapa,count_lcw);
     //SYS_CONSOLE_PRINT("\r\n");
     count_secom0++;
     Message msge;
@@ -3658,42 +3658,24 @@ void LCW_DefaultValue()
 }
  void MCU_TX_POC(char *buffer)       //MCU (Send UART to HMI)
 {
-    size_t PreCheckWordSize=13;//16;
-    //size_t TXBufSize=GetCharlen(buffer)+PreCheckWordSize;
-    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+3;
-    //size_t TXBufSize=GetUint8_len(buffer)+PreCheckWordSize;
+    size_t PreCheckWordSize=6;//16;
+    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+2;
     uint8_t TXCMD[TXBufSize];
-    SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
+    //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
     memset(TXCMD, 0, TXBufSize);
-    //TXCMD[0]=HMI_Start_Byte;    
-    //TXCMD[1]=HMI_Start_Byte;    
-    //TXCMD[2]=HMI_Start_Byte;
-    TXCMD[0]=(char) 'a';
-    TXCMD[1]=(char) 'l';
-    TXCMD[2]=(char) 's';
-    TXCMD[3]=(char) 'v';
-    TXCMD[4]=(char) 'a';
-    TXCMD[5]=(char) 'l';
-    TXCMD[6]=(char) 'u';
-    TXCMD[7]=(char) 'e';
-    TXCMD[8]=(char) '.';
-    TXCMD[9]=(char) 'v';
-    TXCMD[10]=(char) 'a';
-    TXCMD[11]=(char) 'l';
-    TXCMD[12]=(char) '=';
-    //TXCMD[13]=(char) '"';
-
-    for (int i = PreCheckWordSize; i < (TXBufSize-3); i++)
+    TXCMD[0]=(char) 'O';
+    TXCMD[1]=(char) 'K';
+    TXCMD[2]=(char) 'D';
+    TXCMD[3]=(char) 'A';
+    TXCMD[4]=(char) 'L';
+    TXCMD[5]=(char) 'S';
+    for (int i = PreCheckWordSize; i < (TXBufSize-2); i++)
     {
         TXCMD[i] = (char) buffer[i-PreCheckWordSize];
-        SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
+        //SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
     }
-    //TXCMD[TXBufSize-4]=(char) '"';
-    SYS_CONSOLE_MESSAGE("\r\n");
-    for (int k = TXBufSize-3; k < TXBufSize; k++)
-    {
-        TXCMD[k] = HMI_End_Byte;
-    }
+    TXCMD[TXBufSize-2] = 0x0D;
+    TXCMD[TXBufSize-1] = 0x0A;
 #if 0    
     SYS_CONSOLE_PRINT("--------------------TX [ASCII]--------------------\r\n");
     for(int j=0;j<TXBufSize;j++)
@@ -3708,42 +3690,24 @@ void LCW_DefaultValue()
  
  void MCU_TX_PC(char *buffer)       //MCU (Send UART to HMI)
 {
-    size_t PreCheckWordSize=13;//16;
-    //size_t TXBufSize=GetCharlen(buffer)+PreCheckWordSize;
-    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+3;
-    //size_t TXBufSize=GetUint8_len(buffer)+PreCheckWordSize;
+    size_t PreCheckWordSize=6;//16;
+    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+2;
     uint8_t TXCMD[TXBufSize];
-    SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
+    //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
     memset(TXCMD, 0, TXBufSize);
-    //TXCMD[0]=HMI_Start_Byte;    
-    //TXCMD[1]=HMI_Start_Byte;    
-    //TXCMD[2]=HMI_Start_Byte;
-    TXCMD[0]=(char) 'a';
-    TXCMD[1]=(char) 'l';
-    TXCMD[2]=(char) 's';
-    TXCMD[3]=(char) 'v';
-    TXCMD[4]=(char) 'a';
-    TXCMD[5]=(char) 'l';
-    TXCMD[6]=(char) 'u';
-    TXCMD[7]=(char) 'e';
-    TXCMD[8]=(char) '.';
-    TXCMD[9]=(char) 'v';
-    TXCMD[10]=(char) 'a';
-    TXCMD[11]=(char) 'l';
-    TXCMD[12]=(char) '=';
-    //TXCMD[13]=(char) '"';
-
-    for (int i = PreCheckWordSize; i < (TXBufSize-3); i++)
+    TXCMD[0]=(char) 'O';
+    TXCMD[1]=(char) 'K';
+    TXCMD[2]=(char) 'D';
+    TXCMD[3]=(char) 'A';
+    TXCMD[4]=(char) 'L';
+    TXCMD[5]=(char) 'S';
+    for (int i = PreCheckWordSize; i < (TXBufSize-2); i++)
     {
         TXCMD[i] = (char) buffer[i-PreCheckWordSize];
-        SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
+        //SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
     }
-    //TXCMD[TXBufSize-4]=(char) '"';
-    SYS_CONSOLE_MESSAGE("\r\n");
-    for (int k = TXBufSize-3; k < TXBufSize; k++)
-    {
-        TXCMD[k] = HMI_End_Byte;
-    }
+    TXCMD[TXBufSize-2] = 0x0D;
+    TXCMD[TXBufSize-1] = 0x0A;
 #if 0    
     SYS_CONSOLE_PRINT("--------------------TX [ASCII]--------------------\r\n");
     for(int j=0;j<TXBufSize;j++)
@@ -4121,7 +4085,7 @@ void ALS_RunDemo02(void)
 char* HexToDec(int num, char *buffer)
 {
 //char HexToDec_buffer[5];
-    size_t TXBufSize=sizeof(buffer);
+    //size_t TXBufSize=sizeof(buffer);
 /*    
         Als_read_Buf1 = (((num & 0xF000) >> 12) *16*16*16) + (((num & 0x0F00) >> 8) *16*16) + (((num & 0x00F0) >> 4) *16) + (num & 0x000F);
         buffer[0] = (char)(Als_read_Buf1/10000) + '0';
@@ -4136,12 +4100,14 @@ char* HexToDec(int num, char *buffer)
         buffer[3] = (char)((num/10)%10) + '0';
         buffer[4] = (char)(num%10) + '0';
         //size = sizeof(buffer);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[0] = %x\r\n", buffer[0]);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[1] = %x\r\n", buffer[1]);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[2] = %x\r\n", buffer[2]);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[3] = %x\r\n", buffer[3]);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[4] = %x\r\n", buffer[4]);
-        SYS_CONSOLE_PRINT("HexToDec_buffer[4] = %x\r\n", TXBufSize);
+        ////////////////////////////////////////////////////////////
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[0] = %x\r\n", buffer[0]);
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[1] = %x\r\n", buffer[1]);
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[2] = %x\r\n", buffer[2]);
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[3] = %x\r\n", buffer[3]);
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[4] = %x\r\n", buffer[4]);
+        //SYS_CONSOLE_PRINT("HexToDec_buffer[4] = %x\r\n", TXBufSize);
+        
         //SYS_CONSOLE_PRINT("Als_read_Buf1 = %x\r\n", Als_read_Buf1);
         //SYS_CONSOLE_PRINT("Als_read_Buf1 = %d\r\n", Als_read_Buf1);
 /*       

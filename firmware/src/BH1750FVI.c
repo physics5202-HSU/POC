@@ -3,7 +3,7 @@
 //bool ALS_Read(uint8_t i2c1_ctrl_addr, uint16_t *i2c1_pData)
 uint16_t ALS_Read(uint8_t i2c1_ctrl_addr)
 {    
-    SYS_CONSOLE_PRINT("ALS_Read [address:0x%02x]  \r\n",i2c1_ctrl_addr);
+    //SYS_CONSOLE_PRINT("ALS_Read [address:0x%02x]  \r\n",i2c1_ctrl_addr);
     volatile I2C1_TRANSFER_STATUS transferStatusCmd = I2C1_TRANSFER_STATUS_ERROR;
     int count=0;
     SERCOM1_I2C_CallbackRegister( I2C1_Callback, (uintptr_t)&transferStatusCmd );
@@ -46,6 +46,6 @@ uint16_t ALS_Read(uint8_t i2c1_ctrl_addr)
             break;
     }
     uint16_t p_value = ((uint16_t)myData[0] << 8) | myData[1];
-    SYS_CONSOLE_PRINT("ALS LX = 0x%02x%02x  %d\r\n",myData[0],myData[1],p_value);   
+    //SYS_CONSOLE_PRINT("ALS LX = 0x%02x%02x  %d\r\n",myData[0],myData[1],p_value);   
     return p_value;
 }

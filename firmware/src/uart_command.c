@@ -1131,14 +1131,14 @@ unsigned char ExecuteCommand(char *cmddataString,unsigned char n)
 unsigned char ExecuteCommand_POC(char *cmddataString_POC,unsigned char n_POC)
 {
     unsigned char ret;
-    uint8_t test[5];    //EEPROM test
+    //uint8_t test[5];    //EEPROM test
     switch(n_POC){
         case INX_POC_DALS:
             //if(cmddataString[0]=='1')
                 if(cmddataString_POC[5] == '1')
                 {
                 	//FEEDBACK_UART_POC(FEEDBACKOK);
-                  FEEDBACK_UART_POC(FEEDBACKRDAL);
+                  FEEDBACK_UART_POC(POC_FEEDBACKDALS);
                   //FEEDBACK_UART_POC(FEEDBACKOK);
                   //SYS_CONSOLE_PRINT("PERCY OK = %d", 1);
                 }
@@ -1156,13 +1156,17 @@ unsigned char ExecuteCommand_POC(char *cmddataString_POC,unsigned char n_POC)
             break;
         case INX_POC_TIME:
                 if(cmddataString_POC[5] == '1')
-                {            
+                { 
+                    //EEData_POC.ucminute = 0x3B;
+                    FEEDBACK_UART_POC(POC_FEEDBACKTIME);
+#if 0  
                     test[0] = EEData_POC.ucminute;
                     test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
                     test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
                     test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
                     test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
-                    SERCOM5_USART_Write(&test[0], 5);
+                    SERCOM0_USART_Write(&test[0], 5);
+#endif                    
                 }   
             break;            
         case INX_POC_EERM:
@@ -1171,57 +1175,82 @@ unsigned char ExecuteCommand_POC(char *cmddataString_POC,unsigned char n_POC)
                     EEData_POC.ucminute = 0x3c;
                     EEData_POC.uchour = 0x01020304;                    
                     EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
-                    //EEPROM_Write_Data(EEPROM_USERDATA_ADDR1,&EEData);
                 }
                 if(cmddataString_POC[5] == '1')
                 {
                     //EEData_POC.ucminute = 0x3c;
-                    //EEData_POC.uchour = 0x01020304;
+                    EEData_POC.uchour = 0x01020355;
                     EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
-                    //EEPROM_Read_Data(EEPROM_USERDATA_ADDR1,&EEData);
-                    test[0] = EEData_POC.ucminute;
-                    test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
-                    test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
-                    test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
-                    test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
-                    SERCOM5_USART_Write(&test[0], 5);
+                    //test[0] = EEData_POC.ucminute;
+                    //test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                    //test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                    //test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                    //test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
+                    //SERCOM0_USART_Write(&test[0], 5);
+                    FEEDBACK_UART_POC(POC_FEEDBACKEERM);
                 }            
             break;
     }
         ret = 0;    
-   return ret;         
+   return ret;          
 }
 
+/// MAIN RS232 ///
 unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
 {
     unsigned char ret;
-    uint8_t test[5];    //EEPROM test
+    //uint8_t test[5];    //EEPROM test
     switch(n_PC){
         case INX_PC_DALS:
             //if(cmddataString[0]=='1')
                 if(cmddataString_PC[5] == '1')
                 {
                 	//FEEDBACK_UART_POC(FEEDBACKOK);
-                  FEEDBACK_UART_PC(FEEDBACKRDAL);
+                  FEEDBACK_UART_PC(POC_FEEDBACKDALS);
                   //FEEDBACK_UART_POC(FEEDBACKOK);
-                  SYS_CONSOLE_PRINT("PERCY OK = %d", 1);
+                  //SYS_CONSOLE_PRINT("PERCY OK = %d", 1);
+                  
                 }
             break;
         case INX_PC_OCDD:
+            if(GPIO_PC10_Get() == 0){
+                FEEDBACK_UART_PC(POC_FEEDBACKOCDD);
+            }else{
+                FEEDBACK_UART_PC(POC_FEEDBACKOCDD);
+            }             
             break;
         case INX_PC_OCCD:
-            if(GPIO_PA06_Get() == 0)
+            if(GPIO_PA06_Get() == 0){
+                FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+            }else{
+                FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+            }
             break;
         case INX_PC_OCDS:
-            if(GPIO_PA07_Get() == 0)
+            if(GPIO_PA07_Get() == 0){
+                FEEDBACK_UART_PC(POC_FEEDBACKOCDS);
+            }else{
+                FEEDBACK_UART_PC(POC_FEEDBACKOCDS);
+            }                
             break;
         case INX_PC_CBVC:
-            if(GPIO_PC10_Get() == 0)
+                if(ADC0_ConversionStatusGet())
+                {
+                    uint16_t v_adc_p=ADC0_ConversionResultGet();            
+                    if(v_adc_p > 0xFF0){
+                        flag_CBVC = true;
+                        FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
+                    }else{
+                        FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
+                    }
+                }
+            //FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
             break;
         case INX_PC_TIME:
                 if(cmddataString_PC[5] == '1')
                 { 
-                    EEData_POC.ucminute = 0x3B;
+                    //EEData_POC.ucminute = 0x3B;
+                    FEEDBACK_UART_PC(POC_FEEDBACKTIME);
 #if 0  
                     test[0] = EEData_POC.ucminute;
                     test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
@@ -1243,13 +1272,14 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
                 {
                     //EEData_POC.ucminute = 0x3c;
                     //EEData_POC.uchour = 0x01020304;
-                    //EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
-                    test[0] = EEData_POC.ucminute;
-                    test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
-                    test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
-                    test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
-                    test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
-                    SERCOM0_USART_Write(&test[0], 5);
+                    EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    //test[0] = EEData_POC.ucminute;
+                    //test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                    //test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                    //test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                    //test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
+                    //SERCOM0_USART_Write(&test[0], 5);
+                    FEEDBACK_UART_PC(POC_FEEDBACKEERM);
                 }            
             break;
     }
@@ -1518,24 +1548,196 @@ void FEEDBACK_UART_POC(unsigned char n)
    // char Als_read_Buf[6];
 	switch(n){
 				case FEEDBACKOK:
-					 TXBufSize = 5;
+					 TXBufSize = 4;
                      TXCMD[0]=(char) 'O';
                      TXCMD[1]=(char) 'K';
-                     for (int k = TXBufSize-3; k < TXBufSize; k++)
-                     {
-                       TXCMD[k] = HMI_End_Byte;
-                     }
+                     TXCMD[2]=0x0D;
+                     TXCMD[3]=0x0A;
                      SERCOM5_USART_Write(TXCMD, TXBufSize);                     
 					break;
-			    case FEEDBACKRDAL:
-				    //TXBufSize = 2;
-					//TXBufSize = 9;
+				case POC_FEEDBACKNG:
+					 TXBufSize = 4;
+                     TXCMD[0]=(char) 'N';
+                     TXCMD[1]=(char) 'G';
+                     TXCMD[2]=0x0D;
+                     TXCMD[3]=0x0A;
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKOCDD:
+#if 0
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'D';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PC10_Get()){
+                     TXCMD[11] = (char) '1';
+                     }
+                     TXCMD[12] = 0x0D;
+                     TXCMD[13] = 0x0A;
+#else
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'D';
+                     TXCMD[6]=(char) '=';
+                     TXCMD[7]=(char) '=';
+                     TXCMD[8]=(char) '=';
+                     
+                     if(flag_OCDD == true){
+                     flag_OCDD = false;
+                     TXCMD[9]=(char) 'N';
+                     TXCMD[10]=(char) 'G';
+                     }else{
+                     TXCMD[9]=(char) 'O';
+                     TXCMD[10]=(char) 'K';                     
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;                     
+#endif                     
+                     SERCOM5_USART_Write(TXCMD, TXBufSize); 
+                    break;
+ 				case POC_FEEDBACKOCCD:
+#if 0                   
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'C';
+                     TXCMD[5]=(char) 'D';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PA06_Get()){
+                     TXCMD[11] = (char) '1';
+                     }
+                     TXCMD[12] = 0x0D;
+                     TXCMD[13] = 0x0A;
+#else
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'C';
+                     TXCMD[5]=(char) 'D';
+                     TXCMD[6]=(char) '=';
+                     TXCMD[7]=(char) '=';
+                     TXCMD[8]=(char) '=';                     
+                     
+                     if(flag_OCCD == true){
+                     flag_OCDD = false;
+                     TXCMD[9]=(char) 'N';
+                     TXCMD[10]=(char) 'G';
+                     }else{
+                     TXCMD[9]=(char) 'O';
+                     TXCMD[10]=(char) 'K';                     
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;                             
+#endif                     
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKOCDS:
+#if 0                    
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'S';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PA07_Get()){
+                     TXCMD[11] = (char) '1';
+                     }
+                     TXCMD[12] = 0x0D;
+                     TXCMD[13] = 0x0A;
+#else
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'S';
+                     TXCMD[6]=(char) '=';
+                     TXCMD[7]=(char) '=';
+                     TXCMD[8]=(char) '=';
+                     
+                     if(flag_OCDS == true){
+                     flag_OCDS = false;
+                     TXCMD[9]=(char) 'N';
+                     TXCMD[10]=(char) 'G';
+                     }else{
+                     TXCMD[9]=(char) 'O';
+                     TXCMD[10]=(char) 'K';                     
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;                      
+#endif                     
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKCBVC:
+#if 0                   
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'C';
+                     TXCMD[3]=(char) 'B';
+                     TXCMD[4]=(char) 'V';
+                     TXCMD[5]=(char) 'C';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(ADC0_ConversionStatusGet()){
+                     TXCMD[11] = (char) '1';
+                     }
+                     TXCMD[12] = 0x0D;
+                     TXCMD[13] = 0x0A;
+#else
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'C';
+                     TXCMD[3]=(char) 'B';
+                     TXCMD[4]=(char) 'V';
+                     TXCMD[5]=(char) 'C';
+                     TXCMD[6]=(char) '=';
+                     TXCMD[7]=(char) '=';
+                     TXCMD[8]=(char) '=';                     
+                     
+                     if(flag_OCDS == true){
+                     flag_OCDS = false;
+                     TXCMD[9]=(char) 'N';
+                     TXCMD[10]=(char) 'G';
+                     }else{
+                     TXCMD[9]=(char) 'O';
+                     TXCMD[10]=(char) 'K';                     
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;                      
+#endif                     
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);                     
+                    break;                    
+			    case POC_FEEDBACKDALS:
 					Als_read = ALS_Read(ALS_1_CTRL_ADDR);
-                     //TXCMD[0]=Als_read >> 8;
-                     //TXCMD[1]=Als_read << 8;
-                     //SERCOM5_USART_Write(TXCMD, TXBufSize);
-					HexToDec(Als_read, Als_read_Buf);
-                    
+					HexToDec(Als_read, Als_read_Buf);                    
                     MCU_TX_POC(Als_read_Buf);
 #if	0                    
 				    for (int i = 0; i < (TXBufSize-3); i++)
@@ -1548,12 +1750,55 @@ void FEEDBACK_UART_POC(unsigned char n)
 				        TXCMD[k] = HMI_End_Byte;
 				    }	
 #endif					
-					break;                  
+					break;
+                case POC_FEEDBACKTIME:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'T';
+                     TXCMD[3]=(char) 'I';
+                     TXCMD[4]=(char) 'M';
+                     TXCMD[5]=(char) 'E';
+                     
+                    //EEData_POC.ucminute = 0x3B;
+#if 1  
+                     TXCMD[6] = EEData_POC.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);
+#endif                    
+                    break;
+                case POC_FEEDBACKEERM:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'E';
+                     TXCMD[3]=(char) 'E';
+                     TXCMD[4]=(char) 'R';
+                     TXCMD[5]=(char) 'M';
+                     
+                    //EEData_POC.ucminute = 0x3B;
+#if 1  
+                     TXCMD[6] = EEData_POC.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM5_USART_Write(TXCMD, TXBufSize);
+#endif                    
+                    break;
+                    
 	       	}
 	        //SERCOM0_USART_Write(TXCMD, TXBufSize);
 free(TXCMD);
 }
-
+/// MAIN RS232 ///
 void FEEDBACK_UART_PC(unsigned char n)
 {
 	//uint8_t TXCMD[40];
@@ -1562,24 +1807,108 @@ void FEEDBACK_UART_PC(unsigned char n)
    // char Als_read_Buf[6];
 	switch(n){
 				case FEEDBACKOK:
-					 TXBufSize = 5;
+					 TXBufSize = 4;
                      TXCMD[0]=(char) 'O';
                      TXCMD[1]=(char) 'K';
-                     for (int k = TXBufSize-3; k < TXBufSize; k++)
-                     {
-                       TXCMD[k] = HMI_End_Byte;
-                     }
+                     TXCMD[2]=0x0D;
+                     TXCMD[3]=0x0A;
                      SERCOM0_USART_Write(TXCMD, TXBufSize);                     
 					break;
-			    case FEEDBACKRDAL:
-				    //TXBufSize = 2;
-					//TXBufSize = 9;
+				case POC_FEEDBACKNG:
+					 TXBufSize = 4;
+                     TXCMD[0]=(char) 'N';
+                     TXCMD[1]=(char) 'G';
+                     TXCMD[2]=0x0D;
+                     TXCMD[3]=0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKOCDD:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'D';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PC10_Get()){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize); 
+                    break;
+ 				case POC_FEEDBACKOCCD:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'C';
+                     TXCMD[5]=(char) 'D';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PA06_Get()){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKOCDS:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'O';
+                     TXCMD[3]=(char) 'C';
+                     TXCMD[4]=(char) 'D';
+                     TXCMD[5]=(char) 'S';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(GPIO_PA07_Get()){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }                     
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+				case POC_FEEDBACKCBVC:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'C';
+                     TXCMD[3]=(char) 'B';
+                     TXCMD[4]=(char) 'V';
+                     TXCMD[5]=(char) 'C';
+                    for (int i = 0; i < 4; i++)
+				    {
+				        TXCMD[6+i] = (char) '0';
+				    }
+                     if(flag_CBVC == true){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
+                    break;                    
+			    case POC_FEEDBACKDALS:
 					Als_read = ALS_Read(ALS_1_CTRL_ADDR);
-                     //TXCMD[0]=Als_read >> 8;
-                     //TXCMD[1]=Als_read << 8;
-                     //SERCOM5_USART_Write(TXCMD, TXBufSize);
-					HexToDec(Als_read, Als_read_Buf);
-                    
+					HexToDec(Als_read, Als_read_Buf);                    
                     MCU_TX_PC(Als_read_Buf);
 #if	0                    
 				    for (int i = 0; i < (TXBufSize-3); i++)
@@ -1592,7 +1921,50 @@ void FEEDBACK_UART_PC(unsigned char n)
 				        TXCMD[k] = HMI_End_Byte;
 				    }	
 #endif					
-					break;                  
+					break;
+                case POC_FEEDBACKTIME:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'T';
+                     TXCMD[3]=(char) 'I';
+                     TXCMD[4]=(char) 'M';
+                     TXCMD[5]=(char) 'E';
+                     
+                    //EEData_POC.ucminute = 0x3B;
+#if 1  
+                     TXCMD[6] = EEData_POC.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);
+#endif                    
+                    break;
+                case POC_FEEDBACKEERM:
+					 TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'E';
+                     TXCMD[3]=(char) 'E';
+                     TXCMD[4]=(char) 'R';
+                     TXCMD[5]=(char) 'M';
+                     
+                    //EEData_POC.ucminute = 0x3B;
+#if 1  
+                     TXCMD[6] = EEData_POC.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);
+#endif                    
+                    break;
+                    
 	       	}
 	        //SERCOM0_USART_Write(TXCMD, TXBufSize);
 free(TXCMD);

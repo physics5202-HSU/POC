@@ -179,7 +179,7 @@ extern "C" {
 #define HMI_Start_Byte 0x25
 #define HMI_End_Byte 0xFF
     
-
+#define Als_judge 0x0064    //0xFFFF
     // *****************************************************************************
     // *****************************************************************************
     // Section: Data Types
@@ -521,6 +521,9 @@ extern "C" {
  //uint8_t drbo_NUM;
  uint8_t value_stepL;
  uint8_t Second_poc;
+ //uint8_t flag_ALSRead , flag_JudgeEEPROM;
+ bool flag_ALSRead , flag_JudgeEEPROM;
+ bool flag_OCDD , flag_OCCD , flag_OCDS , flag_CBVC;
     // *****************************************************************************
     // *****************************************************************************
     // Section: Interface Functions

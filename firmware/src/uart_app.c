@@ -1805,6 +1805,7 @@ void UART_APP_Tasks(void) {
                     free(socRxBfr);
                 }  
             }
+#if 0           
         if(flagReadEEPROM == true){
         EEPROM_Read_Data(EEPROM_USERDATA_ADDR1,&EEData);
         flagReadEEPROM = false;
@@ -1813,6 +1814,7 @@ void UART_APP_Tasks(void) {
                //EEData.drbo_NUM = 1;
             //}            
         }
+#endif            
         if(flagALS_Read == true)
         {
            ALS_ReadRun();

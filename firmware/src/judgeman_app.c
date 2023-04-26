@@ -60,7 +60,7 @@
 */
 
 JUDGEMAN_APP_DATA judgeman_appData;
-
+extern EEPROMData_POC EEData_POC;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
@@ -140,6 +140,69 @@ void JUDGEMAN_APP_Tasks ( void )
         {
             //Als_read = ALS_Read(ALS_1_CTRL_ADDR);
             //threadJudgeman();
+#if 0            
+                //ADC0_Enable();
+                //ADC0_ConversionStart();
+                //CBVC
+                if(ADC0_ConversionStatusGet())
+                {
+                    uint16_t v_adc_p=ADC0_ConversionResultGet();
+                    //SYS_CONSOLE_PRINT("v_adc_p = %x\r\n", v_adc_p);
+                   if(v_adc_p > 0xFF0)
+                    {
+                        flag_CBVC = true;
+                        FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
+                        flag_CBVC = false;
+                     }
+                }
+                //if(v_adc_p < 5)
+                //{
+  
+                //}
+#endif                
+#if 0           
+            //OCCD
+            if(!GPIO_PA06_Get())
+            {
+             flag_OCCD = true;   
+             FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+            }
+#endif                
+#if 0                
+            //OCDS    
+            if(GPIO_PA07_Get())
+            {
+             flag_OCDS = true;   
+             FEEDBACK_UART_PC(POC_FEEDBACKOCDS);
+            }
+#endif                
+#if 0                
+            //OCDD    
+            if(!GPIO_PC10_Get())
+            {
+             flag_OCDD = true;   
+             FEEDBACK_UART_PC(POC_FEEDBACKOCDD);
+            }
+#endif            
+#if 1          
+            if(flag_JudgeEEPROM == true){
+                flag_JudgeEEPROM = false;
+            EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+            }
+             if(flagReadEEPROM == true){
+             EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+             flagReadEEPROM = false;
+             }
+#endif 
+#if 1          
+            if(flag_ALSRead == true){
+                flag_ALSRead = false;
+             Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+             if(Als_read < Als_judge){
+              FEEDBACK_UART_PC(POC_FEEDBACKNG);
+             }
+            }
+#endif                 
             break;
         }
 

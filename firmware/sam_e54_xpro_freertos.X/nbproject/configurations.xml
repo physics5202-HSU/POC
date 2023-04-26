@@ -411,7 +411,6 @@
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_Percy_20220726.xml</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230330.xml</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230417.xml</itemPath>
-      <itemPath>../src/config/sam_e54_xpro_freertos/harmony.prj</itemPath>
       <itemPath>../src/config/sam_e54_xpro_freertos/sam_e54_xpro_freertos_prototype_statble_POC_Percy_20230417_timer.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
