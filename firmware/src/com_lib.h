@@ -517,13 +517,14 @@ extern "C" {
  uint8_t driv_board[14];
  uint8_t driv_board_ALS[14];
  uint8_t Als_Crlon,Als_Demo01,Als_Demo02;
- uint16_t Als_max , Als_min , Als_read , Als_count;
+ uint16_t Als_max , Als_min , Als_read , Als_count , pre_Als_read;
  //uint8_t drbo_NUM;
  uint8_t value_stepL;
  uint8_t Second_poc;
  //uint8_t flag_ALSRead , flag_JudgeEEPROM;
- bool flag_ALSRead , flag_JudgeEEPROM;
+ bool flag_ALSRead , flag_JudgeEEPROM , flag_CheckMark;
  bool flag_OCDD , flag_OCCD , flag_OCDS , flag_CBVC;
+ uint8_t Cont_OCDD , Cont_OCCD , Cont_OCDS , Cont_CBVC;
     // *****************************************************************************
     // *****************************************************************************
     // Section: Interface Functions
@@ -732,6 +733,8 @@ extern "C" {
     void MCU_TX_HMI(char *buffer);
     void MCU_TX_POC(char *buffer);
     void MCU_TX_PC(char *buffer);
+    void MCU_TX_PC_NG(char *buffer);
+    void MCU_TX_PC_alarm(char *buffer);
     void MCU_TX_HMI_PICC(uint8_t GID );
     void ALS_AutoRun(void);
     void ALS_RunDemo01(void);

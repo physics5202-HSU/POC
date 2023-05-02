@@ -56,6 +56,7 @@ extern EEPROMData EEDataDefault;
 extern EEPROMData EEData;
 extern EEPROMData_POC EEDataDefault_POC;
 extern EEPROMData_POC EEData_POC;
+extern EEPROMData_POC EEData_POC_EEPROM;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
@@ -76,10 +77,12 @@ void TC3_Callback_InterruptHandler(TC_TIMER_STATUS status, uintptr_t context)
     //GPIO_PB01_Toggle();
     Second_poc = Second_poc+1;
     //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
-    //SYS_CONSOLE_PRINT("Second = %d\r\n", Second_poc);   
+    //SYS_CONSOLE_PRINT("Second = %d\r\n", Second_poc);
+
     if(Second_poc == 0x3c)
     {
         flag_ALSRead = true;
+        flag_CheckMark = true;
         Second_poc = 0; 
        EEData_POC.ucminute = EEData_POC.ucminute + 1;
        //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
@@ -105,8 +108,10 @@ int main ( void )
 	RTC_Timer32CallbackRegister(rtcEventHandler, 0);
 	RTC_Timer32Start();
     EEData_POC = EEDataDefault_POC;
+    EEData_POC_EEPROM = EEDataDefault_POC;
     Second_poc = 0;
     flag_ALSRead = false;
+    flag_CheckMark = false;
     flag_JudgeEEPROM = false;
     TC3_TimerCallbackRegister(TC3_Callback_InterruptHandler, (uintptr_t)NULL);  
     TC3_TimerStart();    
@@ -122,6 +127,7 @@ int main ( void )
     value_stepL = 0;
     //flagALS = threadALS();
     flagALS = false;
+    flagALS_Read = false;
     flagALS_TAR = false;
     flagGPIO = false;
     flagADC = false;
@@ -134,6 +140,10 @@ int main ( void )
     flag_OCCD = false;
     flag_OCDS = false;
     flag_CBVC = false;
+    Cont_OCDD = 0;
+    Cont_OCCD = 0;
+    Cont_OCDS = 0;
+    Cont_CBVC = 0;
     //drbo_NUM = EEData.drbo_NUM_EE;
     //ADC0_CallbackRegister(ADC_EventHandler, (uintptr_t)NULL);
     //ADC0_Enable();

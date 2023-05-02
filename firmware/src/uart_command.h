@@ -70,9 +70,9 @@ extern "C" {
 #define LCW_CMD_NUM 34				
 #define LCW_CMD_LEN 4 
     
-#define POC_CMD_NUM 7				
+#define POC_CMD_NUM 8				
 #define POC_CMD_LEN 4  
-#define PC_CMD_NUM 7				
+#define PC_CMD_NUM 8				
 #define PC_CMD_LEN 4     
 
 #define UART_Start_Byte 0x24     //$$$
@@ -149,6 +149,11 @@ enum {
     POC_FEEDBACKDALS,
     POC_FEEDBACKTIME,
     POC_FEEDBACKEERM,
+    POC_FEEDBACKGPIO,
+    POC_FEEDBACKGPIONG,
+    POC_FEEDBACKDALSNG,
+    POC_FEEDBACKDALSAL,
+    POC_FEEDBACKEERMALL,
 };
 
 enum {		    //RS232 Command Execute
@@ -159,6 +164,7 @@ enum {		    //RS232 Command Execute
     INX_POC_CBVC, //Voltage/Current/Temp.  LED Open/Short
     INX_POC_TIME, //time
     INX_POC_EERM, //EEPROM
+    INX_POC_GPIO, //GPIO
 };
 
 enum {		    //RS232 Command Execute
@@ -169,6 +175,7 @@ enum {		    //RS232 Command Execute
     INX_PC_CBVC, //Voltage/Current/Temp.  LED Open/Short
     INX_PC_TIME, //time
     INX_PC_EERM, //EEPROM
+    INX_PC_GPIO, //GPIO
 };
 
     // *****************************************************************************

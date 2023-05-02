@@ -3695,8 +3695,8 @@ void LCW_DefaultValue()
     uint8_t TXCMD[TXBufSize];
     //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
     memset(TXCMD, 0, TXBufSize);
-    TXCMD[0]=(char) 'O';
-    TXCMD[1]=(char) 'K';
+    TXCMD[0]=(char) 'N';
+    TXCMD[1]=(char) 'G';
     TXCMD[2]=(char) 'D';
     TXCMD[3]=(char) 'A';
     TXCMD[4]=(char) 'L';
@@ -3718,7 +3718,72 @@ void LCW_DefaultValue()
     }
 #endif    
     SERCOM0_USART_Write(TXCMD, TXBufSize);
-}  
+}
+ 
+ void MCU_TX_PC_NG(char *buffer)       //MCU (Send UART to HMI)
+{
+    size_t PreCheckWordSize=6;//16;
+    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+2;
+    uint8_t TXCMD[TXBufSize];
+    //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
+    memset(TXCMD, 0, TXBufSize);
+    TXCMD[0]=(char) 'N';
+    TXCMD[1]=(char) 'G';
+    TXCMD[2]=(char) 'D';
+    TXCMD[3]=(char) 'A';
+    TXCMD[4]=(char) 'L';
+    TXCMD[5]=(char) 'S';
+    for (int i = PreCheckWordSize; i < (TXBufSize-2); i++)
+    {
+        TXCMD[i] = (char) buffer[i-PreCheckWordSize];
+        //SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
+    }
+    TXCMD[TXBufSize-2] = 0x0D;
+    TXCMD[TXBufSize-1] = 0x0A;
+#if 0    
+    SYS_CONSOLE_PRINT("--------------------TX [ASCII]--------------------\r\n");
+    for(int j=0;j<TXBufSize;j++)
+    {
+        SYS_CONSOLE_PRINT("0x%02x ",TXCMD[j]);
+        if (((j+1) % 10 == 0) || (j == TXBufSize-1))
+            SYS_CONSOLE_PRINT("\r\n");
+    }
+#endif    
+    SERCOM0_USART_Write(TXCMD, TXBufSize);
+}
+
+ void MCU_TX_PC_alarm(char *buffer)       //MCU (Send UART to HMI)
+{
+    size_t PreCheckWordSize=6;//16;
+    size_t TXBufSize=sizeof(buffer)+1+PreCheckWordSize+2;
+    uint8_t TXCMD[TXBufSize];
+    //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
+    memset(TXCMD, 0, TXBufSize);
+    TXCMD[0]=(char) 'A';
+    TXCMD[1]=(char) 'L';
+    TXCMD[2]=(char) 'D';
+    TXCMD[3]=(char) 'A';
+    TXCMD[4]=(char) 'L';
+    TXCMD[5]=(char) 'S';
+    for (int i = PreCheckWordSize; i < (TXBufSize-2); i++)
+    {
+        TXCMD[i] = (char) buffer[i-PreCheckWordSize];
+        //SYS_CONSOLE_PRINT("%c", buffer[i-PreCheckWordSize]);
+    }
+    TXCMD[TXBufSize-2] = 0x0D;
+    TXCMD[TXBufSize-1] = 0x0A;
+#if 0    
+    SYS_CONSOLE_PRINT("--------------------TX [ASCII]--------------------\r\n");
+    for(int j=0;j<TXBufSize;j++)
+    {
+        SYS_CONSOLE_PRINT("0x%02x ",TXCMD[j]);
+        if (((j+1) % 10 == 0) || (j == TXBufSize-1))
+            SYS_CONSOLE_PRINT("\r\n");
+    }
+#endif    
+    SERCOM0_USART_Write(TXCMD, TXBufSize);
+}
+ 
  void ALS_AutoRun(void)
  {
   //uint8_t HMI_VALUE[8][14];

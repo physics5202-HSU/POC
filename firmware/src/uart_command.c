@@ -48,11 +48,11 @@ unsigned char LCWCommandTab[LCW_CMD_NUM][LCW_CMD_LEN] = {                       
 };
 
 unsigned char POCCommandTab[POC_CMD_NUM][POC_CMD_LEN] = {                               //TOTAL SUPPORT LCW COMMAND TABLE
-{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"},      //0~9
+{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"}, {"GPIO"},      //0~9
 };
 
 unsigned char PCCommandTab[PC_CMD_NUM][PC_CMD_LEN] = {                               //TOTAL SUPPORT LCW COMMAND TABLE
-{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"},      //0~9
+{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"}, {"GPIO"},      //0~9
 };
 
 uint8_t lcw_V_value[7]={138,147,150,154,161,177,248};
@@ -63,6 +63,7 @@ extern EEPROMData_POC EEDataDefault_POC;
 EEPROMData EEData;
 EEPROMData EEData_test;
 EEPROMData_POC EEData_POC;
+EEPROMData_POC EEData_POC_EEPROM;
 //extern  uint16_t Als_max , Als_min , Als_read; //
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -224,7 +225,7 @@ void PC_parsingCommand_SERCOM0(uint8_t *RxBuffer_PC, size_t RxBufSize_PC)
     {  
         if ((RxBuffer_PC[0] == UART_Start_Byte) && (RxBuffer_PC[1] == UART_Start_Byte) && (RxBuffer_PC[2] == UART_Start_Byte))
         {         
-            size_t rx_size_PC = 10;   //Command 4 byte + data 6 byte
+            size_t rx_size_PC = 9;   //Command 4 byte + data 5 byte
             char RxCMDBuffer_PC[rx_size_PC];
             memset(RxCMDBuffer_PC, 0, rx_size_PC); 
             for (int i = 0; i < rx_size_PC; i++)
@@ -297,8 +298,8 @@ memset(CMDDataBuffer_POC, 0, 6);
 void CheckPC_Command(char *chkcmdString_PC,size_t cmd_size_PC)
 {
 unsigned char i,j,k;
-char CMDDataBuffer_PC[6];
-memset(CMDDataBuffer_PC, 0, 6);
+char CMDDataBuffer_PC[5];
+memset(CMDDataBuffer_PC, 0, 5);
 //unsigned int ret;
 		for(i = 0 ; i < PC_CMD_NUM ; i++ ){
 			for(j = 0 ; j < PC_CMD_LEN ; j++ ){
@@ -308,7 +309,7 @@ memset(CMDDataBuffer_PC, 0, 6);
 			}
 			if(j == PC_CMD_LEN ){						    //TVWALLCommandTab[i] matched!
 				//ret = ExecuteCommand(i);
-                for(k=0;k<6;k++)
+                for(k=0;k<5;k++)
                 {
                 CMDDataBuffer_PC[k] = chkcmdString_PC[k+4];
                 }
@@ -1190,6 +1191,9 @@ unsigned char ExecuteCommand_POC(char *cmddataString_POC,unsigned char n_POC)
                     FEEDBACK_UART_POC(POC_FEEDBACKEERM);
                 }            
             break;
+        case INX_POC_GPIO:
+            
+            break;            
     }
         ret = 0;    
    return ret;          
@@ -1203,7 +1207,7 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
     switch(n_PC){
         case INX_PC_DALS:
             //if(cmddataString[0]=='1')
-                if(cmddataString_PC[5] == '1')
+                if(cmddataString_PC[4] == '1')
                 {
                 	//FEEDBACK_UART_POC(FEEDBACKOK);
                   FEEDBACK_UART_PC(POC_FEEDBACKDALS);
@@ -1247,7 +1251,7 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
             //FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
             break;
         case INX_PC_TIME:
-                if(cmddataString_PC[5] == '1')
+                if(cmddataString_PC[4] == '1')
                 { 
                     //EEData_POC.ucminute = 0x3B;
                     FEEDBACK_UART_PC(POC_FEEDBACKTIME);
@@ -1262,25 +1266,56 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
                 }   
             break;            
         case INX_PC_EERM:
-                if(cmddataString_PC[5] == '0')
+                if(cmddataString_PC[4] == '0')
                 {
-                    EEData_POC.ucminute = 0x3c;
-                    EEData_POC.uchour = 0x01020304;                    
+                    EEData_POC.ucminute = 0x3B;
+                    //EEData_POC.uchour = 0x01020304;
+                    //EEData_POC.ucminute = 0x00;
+                    EEData_POC.uchour = 0x00000000;
+                    //EEData_POC.mark = 0x00;
+                    //EEData_POC.Als_100 = 0x0000;
                     EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    //EEPROM_Write_Data(EEPROM_USERDATA_ADDR1,&EEData);
                 }
-                if(cmddataString_PC[5] == '1')
+                if(cmddataString_PC[4] == '1')
                 {
                     //EEData_POC.ucminute = 0x3c;
                     //EEData_POC.uchour = 0x01020304;
-                    EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                  
+                    //EEPROM_Read_Data(EEPROM_USERDATA_ADDR1,&EEData);
+                    //EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC_EEPROM);                    
+                    //for (uint32_t i = 0; i < 100000; i++);//1ns*20000=2ms
                     //test[0] = EEData_POC.ucminute;
                     //test[1] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
                     //test[2] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
                     //test[3] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
                     //test[4] = (uint8_t)(EEData_POC.uchour & 0x00FF);          
-                    //SERCOM0_USART_Write(&test[0], 5);
+                    //SERCOM0_USART_Write(&test[0], 5);  
                     FEEDBACK_UART_PC(POC_FEEDBACKEERM);
-                }            
+                }
+                if(cmddataString_PC[4] == '2')
+                {
+                   //EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                   EEPROM_Read_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC_EEPROM); 
+                   FEEDBACK_UART_PC(POC_FEEDBACKEERMALL);
+                }
+                if(cmddataString_PC[4] == '3')
+                {
+                    //EEData_POC.ucminute = 0x3c;
+                    //EEData_POC.uchour = 0x01020304;
+                    EEData_POC.ucminute = 0x00;
+                    EEData_POC.uchour = 0x00000000;
+                    EEData_POC.mark = 0x00;
+                    EEData_POC.Als_100 = 0x0000;
+                    EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    //EEPROM_Write_Data(EEPROM_USERDATA_ADDR1,&EEData);
+                }                
+            break;
+        case INX_PC_GPIO:
+                if((cmddataString_PC[1] == '1')&(cmddataString_PC[2] == '1')&(cmddataString_PC[3] == '1')&(cmddataString_PC[4] == '1')){
+                   FEEDBACK_UART_PC(POC_FEEDBACKGPIO);
+                }
             break;
     }
         ret = 0;    
@@ -1887,8 +1922,8 @@ void FEEDBACK_UART_PC(unsigned char n)
                     break;
 				case POC_FEEDBACKCBVC:
 					 TXBufSize = 13;
-                     TXCMD[0]=(char) 'O';
-                     TXCMD[1]=(char) 'K';
+                     TXCMD[0]=(char) 'N';
+                     TXCMD[1]=(char) 'G';
                      TXCMD[2]=(char) 'C';
                      TXCMD[3]=(char) 'B';
                      TXCMD[4]=(char) 'V';
@@ -1954,17 +1989,125 @@ void FEEDBACK_UART_PC(unsigned char n)
                      
                     //EEData_POC.ucminute = 0x3B;
 #if 1  
-                     TXCMD[6] = EEData_POC.ucminute;
-                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
-                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
-                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
-                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[6] = EEData_POC_EEPROM.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC_EEPROM.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC_EEPROM.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC_EEPROM.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC_EEPROM.uchour & 0x00FF);
                      TXCMD[11] = 0x0D;
                      TXCMD[12] = 0x0A;
                      SERCOM0_USART_Write(TXCMD, TXBufSize);
 #endif                    
                     break;
-                    
+                case POC_FEEDBACKGPIO:
+					 TXBufSize = 13;
+                     if(flag_OCDD | flag_OCCD | flag_OCDS | flag_CBVC){
+                     TXCMD[0]=(char) 'N';
+                     TXCMD[1]=(char) 'G';
+                     }else{
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';                     
+                     }
+                     TXCMD[2]=(char) 'G';
+                     TXCMD[3]=(char) 'P';
+                     TXCMD[4]=(char) 'I';
+                     TXCMD[5]=(char) 'O';
+                     TXCMD[6] = (char) '0';
+                     if(flag_OCDD == true){
+                     TXCMD[7] = (char) '1';
+                     }else{
+                     TXCMD[7] = (char) '0';
+                     }
+                     if(flag_OCCD == true){
+                     TXCMD[8] = (char) '1';
+                     }else{
+                     TXCMD[8] = (char) '0';
+                     }                     
+                     if(flag_OCDS == true){
+                     TXCMD[9] = (char) '1';
+                     }else{
+                     TXCMD[9] = (char) '0';
+                     }
+                     if(flag_CBVC == true){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }                     
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                        
+                    break;
+                case POC_FEEDBACKGPIONG:
+					 TXBufSize = 13;
+                     if(flag_OCDD | flag_OCCD | flag_OCDS | flag_CBVC){
+                     TXCMD[0]=(char) 'N';
+                     TXCMD[1]=(char) 'G';
+                     }else{
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';                     
+                     }
+                     TXCMD[2]=(char) 'G';
+                     TXCMD[3]=(char) 'P';
+                     TXCMD[4]=(char) 'I';
+                     TXCMD[5]=(char) 'O';
+                     TXCMD[6] = (char) '0';
+                     if(flag_OCDD == true){
+                     TXCMD[7] = (char) '1';
+                     }else{
+                     TXCMD[7] = (char) '0';
+                     }
+                     if(flag_OCCD == true){
+                     TXCMD[8] = (char) '1';
+                     }else{
+                     TXCMD[8] = (char) '0';
+                     }                     
+                     if(flag_OCDS == true){
+                     TXCMD[9] = (char) '1';
+                     }else{
+                     TXCMD[9] = (char) '0';
+                     }
+                     if(flag_CBVC == true){
+                     TXCMD[10] = (char) '1';
+                     }else{
+                     TXCMD[10] = (char) '0';
+                     }                     
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
+                    break;
+                case POC_FEEDBACKDALSNG:
+					Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+					HexToDec(Als_read, Als_read_Buf);                    
+                    MCU_TX_PC_NG(Als_read_Buf);                 
+                    break;
+                case POC_FEEDBACKDALSAL:
+					Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+					HexToDec(Als_read, Als_read_Buf);                    
+                    MCU_TX_PC_alarm(Als_read_Buf);                 
+                    break;
+                case POC_FEEDBACKEERMALL:
+                    TXBufSize = 19;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'E';
+                     TXCMD[3]=(char) 'E';
+                     TXCMD[4]=(char) 'R';
+                     TXCMD[5]=(char) 'M';
+                     TXCMD[6]=(char) 'A';
+                     TXCMD[7]=(char) 'L';
+                     TXCMD[8]=(char) 'L';
+                     TXCMD[9] = EEData_POC_EEPROM.ucminute;
+                     TXCMD[10] = (uint8_t)((EEData_POC_EEPROM.uchour & 0xFF000000) >> 24);
+                     TXCMD[11] = (uint8_t)((EEData_POC_EEPROM.uchour & 0x00FF0000) >> 16);
+                     TXCMD[12] = (uint8_t)((EEData_POC_EEPROM.uchour & 0x0000FF00) >> 8);
+                     TXCMD[13] = (uint8_t)(EEData_POC_EEPROM.uchour & 0x00FF);
+                     TXCMD[14] = EEData_POC_EEPROM.mark;
+                     TXCMD[15] = (uint8_t)((EEData_POC_EEPROM.Als_100 & 0xFF00) >> 8);
+                     TXCMD[16] = (uint8_t)(EEData_POC_EEPROM.Als_100 & 0x00FF);
+                     TXCMD[17] = 0x0D;
+                     TXCMD[18] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);
+                    break;                    
 	       	}
 	        //SERCOM0_USART_Write(TXCMD, TXBufSize);
 free(TXCMD);

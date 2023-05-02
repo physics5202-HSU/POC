@@ -134,6 +134,17 @@ typedef struct _EEPROM_USER_DATA_ {
 typedef struct _EEPROM_USER_DATA_POC_ {
     uint8_t ucminute;
 	uint32_t uchour;
+    uint8_t mark;
+    uint16_t Als_100;
+    GroupData DATA[112];
+    uint8_t ucSN[15];
+	uint8_t ucModelnm[15];
+    uint8_t drbo_NUM;
+    uint8_t LCW_NUM;
+    uint16_t Als_max;
+    uint16_t Als_min;
+    uint16_t  Als_table[8];
+    uint16_t Als_target;    
 } EEPROMData_POC;       // total 946 byte
 //extern GroupData GroupDataDefault;
 //extern EEPROMData EEDataDefault;

@@ -140,7 +140,7 @@ void JUDGEMAN_APP_Tasks ( void )
         {
             //Als_read = ALS_Read(ALS_1_CTRL_ADDR);
             //threadJudgeman();
-#if 0            
+#if 1            
                 //ADC0_Enable();
                 //ADC0_ConversionStart();
                 //CBVC
@@ -148,40 +148,71 @@ void JUDGEMAN_APP_Tasks ( void )
                 {
                     uint16_t v_adc_p=ADC0_ConversionResultGet();
                     //SYS_CONSOLE_PRINT("v_adc_p = %x\r\n", v_adc_p);
-                   if(v_adc_p > 0xFF0)
+                   if(v_adc_p > 0xF00)
                     {
                         flag_CBVC = true;
-                        FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
-                        flag_CBVC = false;
-                     }
+                        if(Cont_CBVC < 3){
+                           Cont_CBVC++;                        
+                           FEEDBACK_UART_PC(POC_FEEDBACKGPIONG);
+                           //FEEDBACK_UART_PC(POC_FEEDBACKCBVC);
+                        //flag_CBVC = false;
+                        }
+                        }else{
+                           flag_CBVC = false;
+                           Cont_CBVC = 0;
+                          
+                   }
                 }
                 //if(v_adc_p < 5)
                 //{
   
                 //}
 #endif                
-#if 0           
+#if 1           
             //OCCD
             if(!GPIO_PA06_Get())
             {
-             flag_OCCD = true;   
-             FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+             flag_OCCD = true;
+             if(Cont_OCCD < 3){
+                Cont_OCCD++;
+                FEEDBACK_UART_PC(POC_FEEDBACKGPIONG);
+                //FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+             }
+             }else{
+                flag_OCCD = false;
+                Cont_OCCD = 0;
+            
             }
 #endif                
-#if 0                
+#if 1                
             //OCDS    
             if(GPIO_PA07_Get())
             {
-             flag_OCDS = true;   
-             FEEDBACK_UART_PC(POC_FEEDBACKOCDS);
+             flag_OCDS = true;
+             if(Cont_OCDS < 3){
+                Cont_OCDS++;
+                FEEDBACK_UART_PC(POC_FEEDBACKGPIONG);
+                //FEEDBACK_UART_PC(POC_FEEDBACKOCDS);
+             }  
+              }else{
+                flag_OCDS = false;
+                Cont_OCDS = 0;
             }
+            
 #endif                
-#if 0                
+#if 1                
             //OCDD    
             if(!GPIO_PC10_Get())
             {
-             flag_OCDD = true;   
-             FEEDBACK_UART_PC(POC_FEEDBACKOCDD);
+             flag_OCDD = true;
+             if(Cont_OCDD < 3){
+                Cont_OCDD++;
+                FEEDBACK_UART_PC(POC_FEEDBACKGPIONG);
+                //FEEDBACK_UART_PC(POC_FEEDBACKOCDD);
+             }
+            }else{
+                flag_OCDD = false;
+                Cont_OCDD = 0;
             }
 #endif            
 #if 1          
@@ -194,7 +225,7 @@ void JUDGEMAN_APP_Tasks ( void )
              flagReadEEPROM = false;
              }
 #endif 
-#if 1          
+#if 0          
             if(flag_ALSRead == true){
                 flag_ALSRead = false;
              Als_read = ALS_Read(ALS_1_CTRL_ADDR);
@@ -202,7 +233,34 @@ void JUDGEMAN_APP_Tasks ( void )
               FEEDBACK_UART_PC(POC_FEEDBACKNG);
              }
             }
-#endif                 
+#endif
+#if 1               
+           if(EEData_POC.uchour == 0x00000001)
+           {
+             if(EEData_POC.mark != 0x01){
+             EEData_POC.mark = 0x01;
+             Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+             EEData_POC.Als_100 = Als_read;
+             EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+             }
+           }
+                
+            if((EEData_POC.mark == 0x01) & (flag_CheckMark == true)){
+                flag_CheckMark = false;
+                Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+                if(Als_read <= (EEData_POC.Als_100/2))
+                {
+                 //FEEDBACK_UART_PC(POC_FEEDBACKDALSNG);
+                 FEEDBACK_UART_PC(POC_FEEDBACKDALSAL);
+                }
+            }
+                pre_Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+                for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
+                Als_read = ALS_Read(ALS_1_CTRL_ADDR);
+                if((pre_Als_read - Als_read) > (pre_Als_read/4)){
+                    FEEDBACK_UART_PC(POC_FEEDBACKDALSNG);
+                }
+#endif                
             break;
         }
 
