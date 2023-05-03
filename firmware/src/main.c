@@ -144,6 +144,8 @@ int main ( void )
     Cont_OCCD = 0;
     Cont_OCDS = 0;
     Cont_CBVC = 0;
+    Cont_ALS25NG = 0;
+    flag_pre_Als = true;
     //drbo_NUM = EEData.drbo_NUM_EE;
     //ADC0_CallbackRegister(ADC_EventHandler, (uintptr_t)NULL);
     //ADC0_Enable();

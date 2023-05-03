@@ -6,6 +6,7 @@
             <file>file:/C:/POC/POC/firmware/src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</file>
             <file>file:/C:/POC/POC/firmware/src/eeprom.c</file>
             <file>file:/C:/POC/POC/firmware/src/com_lib.c</file>
+            <file>file:/C:/POC/POC/firmware/src/config/sam_e54_xpro_freertos/peripheral/port/plib_port.c</file>
             <file>file:/C:/POC/POC/firmware/src/eeprom.h</file>
             <file>file:/C:/POC/POC/firmware/src/com_lib.h</file>
             <file>file:/C:/POC/POC/firmware/src/adc.c</file>

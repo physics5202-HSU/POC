@@ -254,12 +254,19 @@ void JUDGEMAN_APP_Tasks ( void )
                  FEEDBACK_UART_PC(POC_FEEDBACKDALSAL);
                 }
             }
+            if(flag_pre_Als == true){    
                 pre_Als_read = ALS_Read(ALS_1_CTRL_ADDR);
                 for (uint32_t i = 0; i < 20000; i++);//1ns*20000=2ms
                 Als_read = ALS_Read(ALS_1_CTRL_ADDR);
                 if((pre_Als_read - Als_read) > (pre_Als_read/4)){
-                    FEEDBACK_UART_PC(POC_FEEDBACKDALSNG);
+                    //if(Cont_ALS25NG < 3 ){
+                        //Cont_ALS25NG++;
+                        FEEDBACK_UART_PC(POC_FEEDBACKDALSNG);
+                    //}else{
+                        //Cont_ALS25NG = 0;
+                    //}
                 }
+            }
 #endif                
             break;
         }

@@ -382,8 +382,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">D489E1672023C5BF2D0DB9A51C34AC90</GeneratedChecksum>
-          <UserChecksum dnOrder="6">D489E1672023C5BF2D0DB9A51C34AC90</UserChecksum>
+          <GeneratedChecksum dnOrder="5">E4415E9C4320BCC1656C80A8260ACAB4</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E4415E9C4320BCC1656C80A8260ACAB4</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">SOURCE</Type>
