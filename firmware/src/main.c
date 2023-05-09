@@ -78,11 +78,14 @@ void TC3_Callback_InterruptHandler(TC_TIMER_STATUS status, uintptr_t context)
     Second_poc = Second_poc+1;
     //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
     //SYS_CONSOLE_PRINT("Second = %d\r\n", Second_poc);
-
+    if((Second_poc == 0x0A) & (flag_Startup == false))
+    {
+        flag_Startup = true;
+    }
     if(Second_poc == 0x3c)
     {
         flag_ALSRead = true;
-        flag_CheckMark = true;
+        //flag_CheckMark = true;
         Second_poc = 0; 
        EEData_POC.ucminute = EEData_POC.ucminute + 1;
        //SYS_CONSOLE_PRINT("Minute = %d\r\n", EEData_POC.ucminute);
@@ -91,6 +94,10 @@ void TC3_Callback_InterruptHandler(TC_TIMER_STATUS status, uintptr_t context)
            flag_JudgeEEPROM = true;
            EEData_POC.ucminute = 0;
            EEData_POC.uchour = EEData_POC.uchour + 1;
+           if((EEData_POC.uchour % 0x18) == 0x00)
+           {
+            flag_CheckMark = true;
+           }           
        }
        
     }   
@@ -145,7 +152,9 @@ int main ( void )
     Cont_OCDS = 0;
     Cont_CBVC = 0;
     Cont_ALS25NG = 0;
+    Cont_TIMEAL = 0;
     flag_pre_Als = true;
+    flag_Startup = false;
     //drbo_NUM = EEData.drbo_NUM_EE;
     //ADC0_CallbackRegister(ADC_EventHandler, (uintptr_t)NULL);
     //ADC0_Enable();

@@ -141,6 +141,22 @@ void JUDGEMAN_APP_Tasks ( void )
             //Als_read = ALS_Read(ALS_1_CTRL_ADDR);
             //threadJudgeman();
 #if 1            
+            //if(EEData_POC.uchour == 0x00004E20){          //20000 hrs warning
+            if(EEData_POC.uchour >= 0x0000000B){          //11 hrs warning    
+             if(Cont_TIMEAL < 3){
+                Cont_TIMEAL++;
+                FEEDBACK_UART_PC(POC_FEEDBACKTIMEWR);
+                //FEEDBACK_UART_PC(POC_FEEDBACKOCCD);
+            // }else{
+                //flag_OCCD = false;
+                //Cont_TIMEAL = 0;
+            
+            }                
+                //FEEDBACK_UART_PC(POC_FEEDBACKTIMEWR);
+            }
+#endif            
+            if(flag_Startup == true){
+#if 1            
                 //ADC0_Enable();
                 //ADC0_ConversionStart();
                 //CBVC
@@ -214,7 +230,8 @@ void JUDGEMAN_APP_Tasks ( void )
                 flag_OCDD = false;
                 Cont_OCDD = 0;
             }
-#endif            
+#endif  
+            }
 #if 1          
             if(flag_JudgeEEPROM == true){
                 flag_JudgeEEPROM = false;
@@ -245,7 +262,8 @@ void JUDGEMAN_APP_Tasks ( void )
              }
            }
                 
-            if((EEData_POC.mark == 0x01) & (flag_CheckMark == true)){
+            //if((EEData_POC.mark == 0x01) & (flag_CheckMark == true) & ((EEData_POC.uchour % 0x18) == 0x00)){
+            if((EEData_POC.mark == 0x01) & (flag_CheckMark == true)){    
                 flag_CheckMark = false;
                 Als_read = ALS_Read(ALS_1_CTRL_ADDR);
                 if(Als_read <= (EEData_POC.Als_100/2))

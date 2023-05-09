@@ -52,7 +52,7 @@ unsigned char POCCommandTab[POC_CMD_NUM][POC_CMD_LEN] = {                       
 };
 
 unsigned char PCCommandTab[PC_CMD_NUM][PC_CMD_LEN] = {                               //TOTAL SUPPORT LCW COMMAND TABLE
-{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"}, {"GPIO"},      //0~9
+{"DALS"}, {"OCDD"}, {"OCCD"}, {"OCDS"}, {"CBVC"}, {"TIME"}, {"EERM"}, {"GPIO"}, {"RSTT"}      //0~9
 };
 
 uint8_t lcw_V_value[7]={138,147,150,154,161,177,248};
@@ -1211,11 +1211,12 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
             //if(cmddataString[0]=='1')
                 if(cmddataString_PC[4] == '1')
                 {
+                    flag_pre_Als = false;
                 	//FEEDBACK_UART_POC(FEEDBACKOK);
                   FEEDBACK_UART_PC(POC_FEEDBACKDALS);
                   //FEEDBACK_UART_POC(FEEDBACKOK);
                   //SYS_CONSOLE_PRINT("PERCY OK = %d", 1);
-                  
+                  flag_pre_Als = true;
                 }
             break;
         case INX_PC_OCDD:
@@ -1274,7 +1275,8 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
                     EEData_POC.ucminute = 0x3B;
                     //EEData_POC.uchour = 0x01020304;
                     //EEData_POC.ucminute = 0x00;
-                    EEData_POC.uchour = 0x00000000;
+                    //EEData_POC.uchour = 0x00000000;
+                    EEData_POC.uchour = 0x00000017;
                     //EEData_POC.mark = 0x00;
                     //EEData_POC.Als_100 = 0x0000;
                     EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
@@ -1353,6 +1355,23 @@ unsigned char ExecuteCommand_PC(char *cmddataString_PC,unsigned char n_PC)
                    FEEDBACK_UART_PC(POC_FEEDBACKGPIO);
                 }
             break;
+        case INX_PC_RSTT:
+                if(cmddataString_PC[4] == '1')
+                {
+                    flag_pre_Als = false;
+                    Cont_TIMEAL = 0;
+                    EEData_POC.ucminute = 0x32;
+                    //EEData_POC.uchour = 0x01020304;
+                    //EEData_POC.ucminute = 0x00;
+                    EEData_POC.uchour = 0x0000000A;
+                    //EEData_POC.mark = 0x00;
+                    //EEData_POC.Als_100 = 0x0000;
+                    EEPROM_Write_Data_POC(EEPROM_USERDATA_ADDR1,&EEData_POC);
+                    flag_pre_Als = true;
+                    FEEDBACK_UART_PC(POC_FEEDBACKRSTTOK);
+                    //EEPROM_Write_Data(EEPROM_USERDATA_ADDR1,&EEData);
+                }            
+            break;            
     }
         ret = 0;    
    return ret;         
@@ -2179,6 +2198,40 @@ void FEEDBACK_UART_PC(unsigned char n)
                      TXCMD[17] = 0x0D;
                      TXCMD[18] = 0x0A;
                      SERCOM0_USART_Write(TXCMD, TXBufSize);
+                    break;
+                case POC_FEEDBACKTIMEWR:
+                    TXBufSize = 13;
+                     TXCMD[0]=(char) 'A';
+                     TXCMD[1]=(char) 'L';
+                     TXCMD[2]=(char) 'T';
+                     TXCMD[3]=(char) 'I';
+                     TXCMD[4]=(char) 'M';
+                     TXCMD[5]=(char) 'E';
+                     TXCMD[6]= EEData_POC.ucminute;
+                     TXCMD[7] = (uint8_t)((EEData_POC.uchour & 0xFF000000) >> 24);
+                     TXCMD[8] = (uint8_t)((EEData_POC.uchour & 0x00FF0000) >> 16);
+                     TXCMD[9] = (uint8_t)((EEData_POC.uchour & 0x0000FF00) >> 8);
+                     TXCMD[10] = (uint8_t)(EEData_POC.uchour & 0x00FF);
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                    
+                    break;
+                case POC_FEEDBACKRSTTOK:
+                    TXBufSize = 13;
+                     TXCMD[0]=(char) 'O';
+                     TXCMD[1]=(char) 'K';
+                     TXCMD[2]=(char) 'R';
+                     TXCMD[3]=(char) 'S';
+                     TXCMD[4]=(char) 'T';
+                     TXCMD[5]=(char) 'T';
+                     TXCMD[6] = (char) '0';
+                     TXCMD[7] = (char) '0';
+                     TXCMD[8] = (char) '0';
+                     TXCMD[9] = (char) '0';
+                     TXCMD[10] = (char) '1';
+                     TXCMD[11] = 0x0D;
+                     TXCMD[12] = 0x0A;
+                     SERCOM0_USART_Write(TXCMD, TXBufSize);                     
                     break;                    
 	       	}
 	        //SERCOM0_USART_Write(TXCMD, TXBufSize);

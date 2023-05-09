@@ -72,7 +72,7 @@ extern "C" {
     
 #define POC_CMD_NUM 8				
 #define POC_CMD_LEN 4  
-#define PC_CMD_NUM 8				
+#define PC_CMD_NUM 9				
 #define PC_CMD_LEN 4     
 
 #define UART_Start_Byte 0x24     //$$$
@@ -154,6 +154,8 @@ enum {
     POC_FEEDBACKDALSNG,
     POC_FEEDBACKDALSAL,
     POC_FEEDBACKEERMALL,
+    POC_FEEDBACKTIMEWR,
+    POC_FEEDBACKRSTTOK,
 };
 
 enum {		    //RS232 Command Execute
@@ -176,6 +178,7 @@ enum {		    //RS232 Command Execute
     INX_PC_TIME, //time
     INX_PC_EERM, //EEPROM
     INX_PC_GPIO, //GPIO
+    INX_PC_RSTT, //Reset
 };
 
     // *****************************************************************************

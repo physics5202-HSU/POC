@@ -522,9 +522,9 @@ extern "C" {
  uint8_t value_stepL;
  uint8_t Second_poc;
  //uint8_t flag_ALSRead , flag_JudgeEEPROM;
- bool flag_ALSRead , flag_JudgeEEPROM , flag_CheckMark , flag_pre_Als;
+ bool flag_ALSRead , flag_JudgeEEPROM , flag_CheckMark , flag_pre_Als , flag_Startup;
  bool flag_OCDD , flag_OCCD , flag_OCDS , flag_CBVC;
- uint8_t Cont_OCDD , Cont_OCCD , Cont_OCDS , Cont_CBVC , Cont_ALS25NG;
+ uint8_t Cont_OCDD , Cont_OCCD , Cont_OCDS , Cont_CBVC , Cont_ALS25NG , Cont_TIMEAL;
     // *****************************************************************************
     // *****************************************************************************
     // Section: Interface Functions

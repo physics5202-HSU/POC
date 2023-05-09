@@ -3695,8 +3695,8 @@ void LCW_DefaultValue()
     uint8_t TXCMD[TXBufSize];
     //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
     memset(TXCMD, 0, TXBufSize);
-    TXCMD[0]=(char) 'N';
-    TXCMD[1]=(char) 'G';
+    TXCMD[0]=(char) 'O';
+    TXCMD[1]=(char) 'K';
     TXCMD[2]=(char) 'D';
     TXCMD[3]=(char) 'A';
     TXCMD[4]=(char) 'L';
@@ -3748,8 +3748,10 @@ void LCW_DefaultValue()
         if (((j+1) % 10 == 0) || (j == TXBufSize-1))
             SYS_CONSOLE_PRINT("\r\n");
     }
-#endif    
+#endif
+for (uint8_t j = 0; j < 3; j++){    
     SERCOM0_USART_Write(TXCMD, TXBufSize);
+}
 }
 
  void MCU_TX_PC_alarm(char *buffer)       //MCU (Send UART to HMI)
@@ -3759,8 +3761,8 @@ void LCW_DefaultValue()
     uint8_t TXCMD[TXBufSize];
     //SYS_CONSOLE_PRINT("TXBufSize = %d", TXBufSize);
     memset(TXCMD, 0, TXBufSize);
-    TXCMD[0]=(char) 'A';
-    TXCMD[1]=(char) 'L';
+    TXCMD[0]=(char) 'W';
+    TXCMD[1]=(char) 'R';
     TXCMD[2]=(char) 'D';
     TXCMD[3]=(char) 'A';
     TXCMD[4]=(char) 'L';
@@ -3780,8 +3782,10 @@ void LCW_DefaultValue()
         if (((j+1) % 10 == 0) || (j == TXBufSize-1))
             SYS_CONSOLE_PRINT("\r\n");
     }
-#endif    
+#endif
+for (uint8_t j = 0; j < 3; j++){    
     SERCOM0_USART_Write(TXCMD, TXBufSize);
+}
 }
  
  void ALS_AutoRun(void)
